@@ -306,6 +306,22 @@ following set of elements:
 </section><!-- /Framework -->
 
 <section>
+## Implementation Considerations
+
+<section>
+### Proxies 
+
+Optimizing proxies and other intermediate servers which modify the
+content of fetched resources MUST ensure that the digest associated
+with those resources stays in sync with the new content. One option
+would be simply to refuse to optimize resources for which a page author
+has requested integrity verification. Another option might be to modify
+the page as well as the resources to keep the digests up to date.
+</section><!-- /Implementation::proxies -->
+
+</section><!-- /Implementation -->
+
+<section>
 ## Security Considerations
 
 <section>

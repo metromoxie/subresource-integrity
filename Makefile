@@ -1,7 +1,7 @@
-all: clean index.html
+all: clean draft/index.html
 
 clean:
-	rm -rf index.html
+	rm -rf draft/index.html
 
-index.html: specification.dev.markdown template.erb
-	kramdown --parse-block-html --template='template.erb' specification.dev.markdown > index.html
+draft/index.html: specification.dev.markdown template.erb
+	kramdown --parse-block-html --template='template.erb' specification.dev.markdown > draft/index.html

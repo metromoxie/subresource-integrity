@@ -141,9 +141,18 @@ result of the following command line:
 [openssl]: http://www.openssl.org/
 </div>
 
-[sha2]: #def-sha-2
-[digest]: #def-digest
+[sha2]: #dfn-sha-2
+[digest]: #dfn-digest
+[integrity metadata]: #dfn-integrity-metadata
 </section><!-- /Framework::Required metadata -->
+
+<section>
+### Cryptographic hash functions
+
+Conformant user agents MUST support the [SHA-256][sha2] and [SHA-512][sha2]
+cryptographic hash functions for use as part of a resource's
+[integrity metadata][].
+</section><!-- /Framework::Cryptographic hash functions -->
 
 <section>
 ### Resource verification algorithms

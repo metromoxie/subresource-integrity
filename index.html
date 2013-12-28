@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Subresource Integrity</title>
+  <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+  <script>
+    var respecConfig = {
+        // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+        // Member-SUBM
+        specStatus:           "ED",
+
+        // the specification's short name, as in http://www.w3.org/TR/short-name/
+        shortName:            "subresourceintegrity",
+
+        // if the specification's copyright date is a range of years, specify
+        // the start date here:
+        copyrightStart: "2013",
+
+        // if there a publicly available Editor's Draft, this is the link
+        edDraftURI:           "http://todo.com/todo",
+
+        // editors, add as many as you like
+        // only "name" is required
+        editors:  [
+            { name: "John Smith", url: "mailto:w3c@johnsmith.com",
+              company: "Google, Inc.", companyURL: "http://www.google.com/" },
+        ],
+
+        // name of the WG
+        wg:           "Web Application Security Working Group",
+
+        // URI of the public WG page
+        wgURI:        "http://www.w3.org/2011/webappsec/",
+
+        // name (with the @w3c.org) of the public mailing to which comments are due
+        wgPublicList: "public-webappsec",
+
+        // URI of the patent status for this WG, for Rec-track documents
+        // !!!! IMPORTANT !!!!
+        // This is important for Rec-track documents, do not copy a patent URI from a random
+        // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+        // Team Contact.
+        wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/49309/status",
+
+        localBiblio: {
+          "MIMETYPE": {
+            title: "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types",
+            href: "http://tools.ietf.org/html/rfc2046",
+            authors: [
+              "Ned Freed",
+              "Nathaniel S. Borenstein"
+            ],
+            status: "Draft Standard",
+            publisher: "IETF"
+          },
+          "RFC4648": {
+            title: "The Base16, Base32, and Base64 Data Encodings",
+            href: "http://tools.ietf.org/html/rfc4648",
+            authors: [
+              "Simon Josefsson",
+            ],
+            status: "Proposed Standard",
+            publisher: "IETF"
+          },
+          "RFC6920": {
+            title: "Naming Things with Hashes",
+            href: "http://tools.ietf.org/html/rfc6920",
+            authors: [
+              "Stephen Farrell",
+              "Dirk Kutscher",
+              "Christian Dannewitz",
+              "Borje Ohlman",
+              "Ari Keranen",
+              "Phillip Hallam-Baker",
+            ],
+            status: "Proposed Standard",
+            publisher: "IETF"
+          }
+        }
+    };
+  </script>
+  <style>
+    .todo {
+      color: #E50000;
+      border: 1px solid #F00;
+      padding: 0.5em;
+      margin: 1em 0;
+    }
+    .note {
+      border-left-style: solid;
+      border-left-width: 0.25em;
+      background: none repeat scroll 0 0 #E9FBE9;
+      border-color: #52E052;
+    }
+  </style>
+</head>
+<body>
+<section id="abstract">
+  <p>This specification defines a mechanism by which user agents may verify that
+a fetched resource has been delivered without unexpected manipulation.</p>
+</section>
+
+<section id="sotd">
+  <p>A list of changes to this document may be found at <a href="https://github.com/#TODO">https://github.com/#TODO</a>.</p>
+</section>
+
+<section class="informative">
+  <h2 id="introduction">Introduction</h2>
+
+  <p>It is rare indeed to find a self-contained document on the web. Instead, we
+interact with collages of resources loaded from a variety of origins. User
+agents fetch these resources blindly; data that comes in is accepted as
+canonical, rendered or executed, and cached. Users are left open to a number
+of attack vectors that might change the content of resources in such a way
+as to produce something maliciously different from the author&rsquo;s intent. DNS
+poisoning, man-in-the-middle, and so on are examples that are regularly seen
+in the wild.</p>
+
+  <p>We can mitigate the risk of these kinds of attacks by allowing authors to
+more clearly explain to the user agent <em>exactly</em> which resource they intend
+to load. If an author can provide integrity metadata above and beyond the
+bare URL, then the user agent can validate that the data fetched from the
+URL provied actually matches the authors&rsquo; intent.</p>
+
+  <p>This document specifies such a validation scheme, extending several HTML
+elements with a <code>digest</code> attribute that contains a cryptographic hash of
+the contents of the resource the author expects to load. For instance, an
+author may wish to load jQuery from a shared server rather than hosting it
+on their own origin. Specifying that the <em>expected</em> SHA-256 hash of
+<a href="curl https://code.jquery.com/jquery-1.10.2.min.js"><code>https://code.jquery.com/jquery-1.10.2.min.js</code></a>
+is <code>C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg</code> means
+that the user agent can verify that the data it loads from that URL matches
+that expected hash before executing the JavaScript it contains. This
+integrity verification significantly reduces the risk that an active
+network attacker can substitute malicious content.</p>
+
+  <p>The mechanism specified here may also be useful for purposes other than
+validation. User agents may decide to use digests as identifiers in a
+local cache, for instance, meaning that common resources could be cached
+cross-origin.</p>
+
+</section>
+
+<section id="conformance">
+  <p>Conformance requirements phrased as algorithms or specific steps can be
+implemented in any manner, so long as the end result is equivalent. In
+particular, the algorithms defined in this specification are intended to
+be easy to understand and are not intended to be performant. Implementers
+are encouraged to optimize.</p>
+
+  <section>
+    <h3 id="key-concepts-and-terminology">Key Concepts and Terminology</h3>
+
+    <p>This section defines several terms used throughout the document.</p>
+
+    <p>The term <dfn>digest</dfn> refers to the base64url-encoded result of
+executing a cryptographic hash function on an arbitrary block of data.</p>
+
+    <p>A <dfn>secure channel</dfn> is any communication mechanism that the user
+agent has defined as &ldquo;secure&rdquo; (typically limited to HTTP over Transport
+Layer Security (TLS) [[!RFC2818]]).</p>
+
+    <p>An <dfn>insecure channel</dfn> is any communication mechanism other than
+those the user agent has defined as &ldquo;secure&rdquo;.</p>
+
+    <p>The term <dfn>origin</dfn> is defined in the Origin specification.
+[[!RFC6454]]</p>
+
+    <p>The <dfn>MIME type</dfn> of a resource is a technical hint about the use
+and format of that resource. [[!MIMETYPE]]</p>
+
+    <p>A <dfn>base64url encoding</dfn> is defined in
+<a href="http://tools.ietf.org/html/rfc4648#section-5">RFC 4648, section 5</a>. In a nutshell, it replaces the characters
+U+002B PLUS SIGN (<code>+</code>) and U+002F SOLIDUS (<code>/</code>) characters in normal base64
+encoding with the U+002D HYPHEN-MINUS (<code>-</code>) and U+005F LOW LINE (<code>_</code>)
+characters, respectively. [[!RFC4648]]</p>
+
+    <p>The Augmented Backus-Naur Form (ABNF) notation used in this document is
+specified in RFC 5234. [[!ABNF]]</p>
+
+    <p>The following core rules are included by reference, as defined in
+the <a href="http://tools.ietf.org/html/rfc5234#appendix-B.1">ABNF Appendix B.1</a>: <code>ALPHA</code> (letters), <code>DIGIT</code> (decimal 0-9), <code>WSP</code>
+(white space) and <code>VCHAR</code> (printing characters).</p>
+
+    <p>The <dfn>SHA-256</dfn>, <dfn>SHA-384</dfn>, and <dfn>SHA-512</dfn> are part
+of the <dfn>SHA-2</dfn> set of cryptographic hash functions defined by the
+NIST in <a href="http://csrc.nist.gov/groups/STM/cavp/documents/shs/sha256-384-512.pdf">&ldquo;Descriptions of SHA-256, SHA-384, and SHA-512&rdquo;</a>.</p>
+
+  </section>
+</section>
+
+<section>
+  <h2 id="framework">Framework</h2>
+
+  <p>The integrity verification mechanism specified here boils down to the
+process of generating a sufficiently strong cryptographic digest for a
+resource, and transmitting that digest to a user agent so that it may be
+used when fetching the resource.</p>
+
+  <section>
+    <h3 id="integrity-metadata">Integrity metadata</h3>
+
+    <p>To verify the integrity of a resource, a user agent requires <dfn>integrity
+metadata</dfn>, which consists of the following pieces of information:</p>
+
+    <ul>
+      <li>cryptographic hash function</li>
+      <li><a href="#def-digest">digest</a></li>
+      <li>the resource&rsquo;s MIME type</li>
+    </ul>
+
+    <p>The hash function and digest MUST be provided in order to validate a
+resource&rsquo;s integrity. The MIME type SHOULD be provided, as it mitigates the
+risk of certain attack vectors (see <a href="#mime-type-confusion">MIME Type confusion</a> in
+this document&rsquo;s Security Considerations section).</p>
+
+    <p>This metadata is generally encoded as a &ldquo;named information&rdquo; (<code>ni</code>) URI, as defined in RFC6920. [[!RFC6920]]</p>
+
+    <p>For example, given a resource containing only the string &ldquo;Hello, world!&rdquo;,
+an author might choose <a href="#def-sha-2">SHA-256</a> as a hash function.
+<code>-MO_YqmqPm_BYZwlDkir51GTc9Pt9BvmLrXcRRma8u8</code> is the base64url-encoded
+digest that results. This can be encoded as an <code>ni</code> URI as follows:</p>
+
+    <pre><code>ni:///sha-256;-MO_YqmqPm_BYZwlDkir51GTc9Pt9BvmLrXcRRma8u8
+</code></pre>
+
+    <p>Or, if the author further wishes to specify the content type (<code>text/plain</code>):</p>
+
+    <pre><code>ni:///sha-256;-MO_YqmqPm_BYZwlDkir51GTc9Pt9BvmLrXcRRma8u8?ct=text/plain
+</code></pre>
+
+    <div class="note">
+      <p>Digests may be generated using any number of utilities. <a href="http://www.openssl.org/">OpenSSL</a>, for
+example, is quite commonly available. The example in this section is the
+result of the following command line:</p>
+
+      <pre><code>echo -n "Hello, world." | openssl dgst -sha256 -binary | openssl enc -base64 | sed -e 's/+/-/g' -e 's/\//_/g'
+</code></pre>
+
+    </div>
+
+  </section>
+  <!-- /Framework::Required metadata -->
+
+  <section>
+    <h3 id="resource-verification-algorithms">Resource verification algorithms</h3>
+
+    <section>
+      <h4 id="apply-varalgorithmvar-to-varresourcevar">Apply <var>algorithm</var> to <var>resource</var></h4>
+
+      <ol>
+        <li>If <var>algorithm</var> is not a hash function recognized and supported
+by the user agent, return <code>null</code>.</li>
+        <li>Let <var>result</var> be the result of applying <var>algorithm</var> to
+<var>resource</var>.</li>
+        <li>Let <var>encodedResult</var> be result of base64url-encoding
+<var>result</var>.</li>
+        <li>Strip any trailing U+003D EQUALS SIGN (<code>=</code>) characters from
+<var>encodedResult</var>.</li>
+        <li>Return <var>encodedResult</var>.</li>
+      </ol>
+
+    </section>
+    <section>
+      <h4 id="does-varresourcevar-match-vardigestvar">Does <var>resource</var> match <var>digest</var>?</h4>
+
+      <ol>
+        <li>If <var>digest</var> is the empty string, return <code>true</code>.</li>
+        <li>If <var>digest</var> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URI,
+return <code>false</code>.</li>
+        <li>Let <var>algorithm</var> be the <var>alg</var> component of
+<var>digest</var>.</li>
+        <li>Let <var>expectedValue</var> be the <var>val</var> component of
+<var>digest</var>.</li>
+        <li>Let <var>actualValue</var> be the result of <a href="#apply-algorithm-to-resource">applying
+<var>algorithm</var> to <var>resource</var></a>.</li>
+        <li>If <var>actualValue</var> is <code>null</code>, return <code>false</code>.</li>
+        <li>If <var>actualValue</var> is a case-sensitive match for
+<var>expectedValue</var>, return <code>true</code>. Otherwise, return <code>false</code>.</li>
+      </ol>
+
+    </section>
+  </section>
+
+  <section>
+    <h3 id="verification-of-html-document-subresources">Verification of HTML document subresources</h3>
+
+    <p>A variety of HTML elements result in requests for resources that are to be
+embedded into the document, or executed in its context. To support integrity
+metadata for each of these, and new elements that are added in the future,
+a new <code>digest</code> attribute is added to HTML5&rsquo;s list of
+<a href="http://www.w3.org/TR/html5/dom.html#global-attributes">global attributes</a> that MAY be specified on any HTML element, and
+a corresponding attribute is added to the <a href="http://www.w3.org/TR/html5/dom.html#htmlelement"><code>HTMLElement</code>
+interface</a>.</p>
+
+    <section>
+      <h4 id="the-digest-attribute">The <code>digest</code> attribute</h4>
+
+      <p>The <code>digest</code> attribute represents integrity metadata for an element. The
+value of the attribute MUST be either the empty string, or a valid &ldquo;named
+information&rdquo; (<code>ni</code>) URI. [[!RFC6920]]</p>
+
+      <p>The <code>digest</code> IDL attribute must <a href="http://www.w3.org/TR/html5/infrastructure.html#reflect">reflect</a> the <code>digest</code> content attribute.</p>
+
+    </section>
+    <!-- /Framework::HTML::digest -->
+
+    <section>
+      <h4 id="htmlelement-extension">HTMLElement extension</h4>
+
+      <dl title="partial interface HTMLElement" class="idl">
+        <dt>attribute DOMString digest</dt>
+        <dd>The value of this element&rsquo;s <code>digest</code> attribute</dd>
+      </dl>
+    </section>
+    <!-- /Framework::HTML::HTMLElement -->
+
+    <section>
+      <h4 id="handling-integrity-violations">Handling integrity violations</h4>
+
+      <p>Documents may specify the behavior of a failed integrity check by delivering
+a <a href="http://w3.org/TR/CSP11">Content Security Policy</a> which contains an <code>integrity-policy</code>
+directive, defined by the following ABNF grammar:</p>
+
+      <pre><code>directive-name: "integrity-policy"
+directive-value: "block" / "report" / "fallback"
+</code></pre>
+
+      <p>A documents&rsquo;s <dfn>integrity policy</dfn> is the value of the
+<code>integrity-policy</code> directive, if explicitly provided as part of the
+document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
+
+      <p>If the document&rsquo;s integrity policy is <code>block</code>, the user agent MUST refuse to
+render or execute resources that fail an integrity check, <em>and</em> must 
+<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
+
+      <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY refuse to
+render or execute resources that fail an integrity check, <em>and</em> MUST 
+<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
+
+      <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST
+<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>, and MAY load a fallback resource via a TODO
+mechansism that isn&rsquo;t specified yet.</p>
+
+    </section>
+
+    <section>
+      <h5 id="elements">Elements</h5>
+
+      <section>
+        <h6 id="the-script-element">The <code>script</code> element</h6>
+
+        <p>Insert the following steps after step 5 of step 14 of HTML5&rsquo;s
+<a href="http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script">&ldquo;prepare a script&rdquo; algorithm</a>:</p>
+
+        <ol start="6">
+          <li>Let <var>digest</var> be the value of the element&rsquo;s <code>digest</code> attribute.</li>
+          <li>If <var>digest</var> is the empty string, skip the remaining steps.</li>
+          <li>Once the <a href="http://www.w3.org/TR/html5/infrastructure.html#fetch">fetching algorithm</a> has completed:
+            <ol>
+              <li>Let <var>resource</var> be the binary representation of the body of
+the response returned from the fetching algorithm.</li>
+              <li>If <a href="#does-resource-match-digest">resource does not match <var>digest</var></a>:
+                <ol>
+                  <li>If the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
+task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code>
+at the element, and abort these steps.</li>
+                  <li>If the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>fallback</code>&hellip;</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+
+        <p class="todo">TODO: It&rsquo;s not clear that &ldquo;binary representation of the body &hellip;&rdquo;
+does what we want. I don&rsquo;t think we yet have a good way of saying &ldquo;bits
+on the wire&rdquo;.</p>
+
+      </section>
+      <!-- /Framework::HTML::Elements::script -->
+
+      <section>
+        <h6 id="the-every-other-element">The <code>every-other</code> element</h6>
+
+        <div class="todo">
+          <p>TODO: <code>script</code> is a good stard, but at a minimum, we&rsquo;ll need to cover the
+following set of elements:</p>
+
+          <ul>
+            <li>audio</li>
+            <li>embed</li>
+            <li>iframe</li>
+            <li>img</li>
+            <li>link</li>
+            <li>object</li>
+            <li>source</li>
+            <li>video</li>
+          </ul>
+        </div>
+      </section>
+      <!-- /Framework::HTML::Elements::* -->
+
+    </section>
+    <!-- /Framework::HTML::Elements -->
+
+  </section>
+  <!-- /Framework::HTML -->
+</section>
+<!-- /Framework -->
+
+<section>
+  <h2 id="security-considerations">Security Considerations</h2>
+
+  <section>
+    <h3 id="insecure-channels-remain-insecure">Insecure channels remain insecure</h3>
+
+    <p>A digest delivered over an insecure channel provides no security benefit.
+Attackers can alter the digest in-flight (or remove it entirely (or do
+absolutely anything else to the document)), just as they could alter the
+resource the hash is meant to validate. Authors who desire any sort of
+security whatsoever SHOULD deliver resources containing digests over
+secure channels.</p>
+  </section>
+  <!-- /Security::Insecure channels -->
+
+  <section>
+    <h3 id="hash-collision-attacks">Hash collision attacks</h3>
+
+    <p>Digests are only as strong as the hash function used to generate them. User
+agents SHOULD refuse to support known-weak hashing functions like MD5, and
+SHOULD restrict supported hashing functions to those known to be
+collision-resistant. At the time of writing, SHA-256 is a good baseline.
+Moreover, user agents SHOULD reevaluate their supported hashing functions
+on a regular basis, and deprecate support for those functions shown to be
+insecure.</p>
+  </section>
+  <!-- /Security::Hash collision -->
+
+  <section>
+    <h3 id="origin-confusion">Origin confusion</h3>
+
+    <p>User agents which set up a caching mechanism that uses only the digest to
+identify a resource are vulnerable to attacks which bypass same-origin
+restrictions unless they are very careful when choosing whether or not to
+read data straight from the cache.</p>
+
+    <p>For instance:</p>
+
+    <ul>
+      <li>
+        <p><a href="http://www.w3.org/TR/html5/webappapis.html#runtime-script-errors">Runtime script errors</a> are sanitized for resources that are
+<a href="http://www.w3.org/TR/html5/infrastructure.html#cors-cross-origin">CORS-cross-origin</a> to the page into which they are loaded. [[!HTML5]]</p>
+      </li>
+      <li>
+        <p>XMLHttpRequest may only load data from same-origin resources, or from
+resources delivered with proper CORS headers. [[!XMLHTTPREQUEST]]</p>
+      </li>
+    </ul>
+
+    <p class="todo">TODO: Moar.</p>
+
+  </section>
+  <!-- /Security::Origin confusion -->
+
+  <section>
+    <h3 id="mime-type-confusion">MIME type confusion</h3>
+
+    <p>User agents which set up a caching mechanism that uses only the digest to
+identify a resource are vulnerable to attacks which create resources that
+behave differently based on the context in which they are loaded. <a href="http://en.wikipedia.org/wiki/Gifar">Gifar</a>
+is the canonical example of such an attack.</p>
+
+    <p>Authors SHOULD mitigate this risk by specifing the expected content type
+along with the digest, as specified in <a href="http://tools.ietf.org/html/rfc6920#section-3.1">RFC 6920, section 3.1</a>,
+and verifying that the content type of the resource matches the expectations
+of the context into which it is loaded. For instance, a resource of type
+<code>text/plain</code> loaded via a <code>script</code> element MUST not execute.</p>
+
+  </section>
+  <!-- /Security::MIME Type confusion -->
+
+</section>
+<!-- /Security -->
+
+</body>
+</html>

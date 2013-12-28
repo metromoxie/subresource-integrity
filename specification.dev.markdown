@@ -84,10 +84,6 @@ characters, respectively. [[!RFC4648]]
 The Augmented Backus-Naur Form (ABNF) notation used in this document is
 specified in RFC 5234. [[!ABNF]]
 
-The following core rules are included by reference, as defined in
-the [ABNF Appendix B.1][abnf-b1]: `ALPHA` (letters), `DIGIT` (decimal 0-9), `WSP`
-(white space) and `VCHAR` (printing characters).
-
 The <dfn>SHA-256</dfn>, <dfn>SHA-384</dfn>, and <dfn>SHA-512</dfn> are part
 of the <dfn>SHA-2</dfn> set of cryptographic hash functions defined by the
 NIST in ["Descriptions of SHA-256, SHA-384, and SHA-512"][sha].

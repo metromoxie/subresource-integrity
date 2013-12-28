@@ -73,6 +73,11 @@ The term <dfn>origin</dfn> is defined in the Origin specification.
 The <dfn>MIME type</dfn> of a resource is a technical hint about the use
 and format of that resource. [[!MIMETYPE]]
 
+The <dfn>entity body</dfn> of a resource is defined by the [HTTP 1.1
+specification, section 7.2][entity]. [[!HTTP11]]
+
+[entity]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html
+
 A <dfn>base64url encoding</dfn> is defined in
 [RFC 4648, section 5][base64url]. In a nutshell, it replaces the characters
 U+002B PLUS SIGN (`+`) and U+002F SOLIDUS (`/`) characters in normal base64
@@ -271,8 +276,8 @@ Insert the following steps after step 5 of step 14 of HTML5's
 6.  Let <var>digest</var> be the value of the element's `digest` attribute.
 7.  If <var>digest</var> is the empty string, skip the remaining steps.
 8.  Once the [fetching algorithm][] has completed:
-    1.  Let <var>resource</var> be the binary representation of the body of
-        the response returned from the fetching algorithm.
+    1.  Let <var>resource</var> be the binary representation of the
+        [entity body][] of the response returned from the fetching algorithm.
     2.  If [resource does not match <var>digest</var>][match]:
         1.  If the document's [integrity policy][] is `block`, [queue a
             task][queue] to [fire a simple event][fire-simple] named `error`
@@ -280,15 +285,17 @@ Insert the following steps after step 5 of step 14 of HTML5's
         2.  If the document's [integrity policy][] is `fallback`...
 {:start="6"}
 
-TODO: It's not clear that "binary representation of the body ..."
+TODO: It's not clear that "binary representation of the entity body ..."
 does what we want. I don't think we yet have a good way of saying "bits
-on the wire".
+on the wire". See [bzbarsky's WG post on this topic][bz]
 {:.todo}
 
 [prepare]: http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script
 [fetching algorithm]: http://www.w3.org/TR/html5/infrastructure.html#fetch
 [queue]: http://www.w3.org/TR/html5/webappapis.html#queue-a-task
 [fire-simple]: http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event
+[entity body]: #dfn-entity-body
+[bz]: http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html
 </section><!-- /Framework::HTML::Elements::script -->
 
 <section>

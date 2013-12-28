@@ -168,7 +168,7 @@ cryptographic hash functions for use as part of a resource's
 1. If <var>algorithm</var> is not a hash function recognized and supported
    by the user agent, return `null`.
 2. Let <var>result</var> be the result of applying <var>algorithm</var> to
-   <var>resource</var>.
+   the binary representation of the [entity body][] of <var>resource</var>.
 3. Let <var>encodedResult</var> be result of base64url-encoding
    <var>result</var>.
 4. Strip any trailing U+003D EQUALS SIGN (`=`) characters from
@@ -276,9 +276,9 @@ Insert the following steps after step 5 of step 14 of HTML5's
 6.  Let <var>digest</var> be the value of the element's `digest` attribute.
 7.  If <var>digest</var> is the empty string, skip the remaining steps.
 8.  Once the [fetching algorithm][] has completed:
-    1.  Let <var>resource</var> be the binary representation of the
-        [entity body][] of the response returned from the fetching algorithm.
-    2.  If [resource does not match <var>digest</var>][match]:
+    1.  Let <var>resource</var> be the response returned from the fetching
+        algorithm.
+    2.  If [<var>resource</var> does not match <var>digest</var>][match]:
         1.  If the document's [integrity policy][] is `block`, [queue a
             task][queue] to [fire a simple event][fire-simple] named `error`
             at the element, and abort these steps.

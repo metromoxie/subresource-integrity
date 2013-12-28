@@ -321,7 +321,7 @@ following set of elements:
 </section><!-- /Framework::HTML -->
 
 <section>
-### Verification of CSS subresources
+### Verification of CSS-loaded subresources
 
 <div class="note">
 Two strawmen. We should poke someone like Tab about these; he'll have
@@ -360,6 +360,26 @@ Hope someone else has better ideas.
 
 </section><!-- /Framework::CSS -->
 
+<section>
+### Verification of JS-loaded subresources
+
+<section class="todo">
+#### Workers
+
+We'll need to somehow deal with `Worker` and `SharedWorker` fetches (and
+potentially `importScripts` inside workers as well).
+
+</section><!-- /Framework::JS::Workers -->
+
+<section class="todo">
+#### XMLHttpRequest
+
+Not sure how relevant this is, but maybe I know the hash of some resource
+I want to load over XHR?
+
+</section><!-- /Framework::JS::XHR -->
+
+</section><!-- /Framework::JS -->
 </section><!-- /Framework -->
 
 <section>

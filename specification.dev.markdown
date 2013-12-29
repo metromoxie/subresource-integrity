@@ -146,7 +146,8 @@ this document's Security Considerations section).
 
 [security-mime]: #mime-type-confusion
 
-This metadata is generally encoded as a "named information" (`ni`) URI, as defined in RFC6920. [[!RFC6920]]
+This metadata is generally encoded as a "named information" (`ni`) URI, as
+defined in RFC6920. [[!RFC6920]]
 
 For example, given a resource containing only the string "Hello, world!",
 an author might choose [SHA-256][sha2] as a hash function.
@@ -258,6 +259,33 @@ The `digest` IDL attribute must [reflect][] the `digest` content attribute.
 </section><!-- /Framework::HTML::digest -->
 
 <section>
+#### The `noncanonical-src` attribute
+
+<div class="todo">
+The idea is that conformant browsers would first try to load resources from
+the `noncanonical-src` attribute's URL iff a `digest` attribute is present.
+Then, if the resource failed to match the digest, the user agent would
+fall back to the `src` attribute's URL. That is:
+
+    <script src="http://example.com/script.js"
+            noncanonical-src="http://cdn.example.com/script.js"
+            digest="ni:///sha-256;jsdfhiuwergn...vaaetgoifq">
+
+The noncanonical resource would be fetched with its [omit credentials
+mode][] set to `always`, to prevent leakage of cookies across insecure
+channels.
+
+[omit credentials mode]: http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode
+
+This only makes sense if we care about allowing cache-friendly (read "HTTP")
+URLs to load in an HTTPS context without warnings. I'm not sure we do, so
+I'm not going to put too much thought into the details here before we
+discuss things a bit more. (mkwst)
+</div>
+
+</section><!-- /Framework::HTML::noncanonical-src -->
+
+<section>
 #### HTMLElement extension
 
 attribute DOMString digest
@@ -281,16 +309,19 @@ A documents's <dfn>integrity policy</dfn> is the value of the
 document's Content Security Policy, or `block` otherwise.
 
 If the document's integrity policy is `block`, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> must 
+render or execute resources that fail an integrity check, <em>and</em> MUST 
 [report a violation][].
 
 If the document's integrity policy is `report`, the user agent MAY refuse to
 render or execute resources that fail an integrity check, <em>and</em> MUST 
 [report a violation][].
 
-If the document's integrity policy is `fallback`, the user agent MUST
-[report a violation][], and MAY load a fallback resource via a TODO
-mechansism that isn't specified yet.
+If the document's integrity policy is `fallback`, the user agent MUST refuse
+to render or execute resources that fail an integrity check, <em>and</em>
+MUST [report a violation][]. The user agent MAY additionally choose to load
+a fallback resource as specified for each relevant element. If the fallback
+resource fails an integrity check, the user agent MUST refuse to render or
+execute the resource, <em>and</em> MUST [report a(nother) violation][].
 {:.todo}
 
 [csp]: http://w3.org/TR/CSP11

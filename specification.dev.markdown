@@ -13,11 +13,12 @@ A list of changes to this document may be found at <https://github.com/#TODO>.
 It is rare indeed to find a self-contained document on the web. Instead, we
 interact with collages of resources loaded from a variety of origins. User
 agents fetch these resources blindly; data that comes in is accepted as
-canonical, rendered or executed, and cached. Users are left open to a number
-of attack vectors that might change the content of resources in such a way
-as to produce something maliciously different from the author's intent. DNS
-poisoning, man-in-the-middle, and so on are examples that are regularly seen
-in the wild.
+canonical, rendered or executed, and cached. Authors must trust that the
+resource their content delivery network delivers is in fact the same resource
+they expect. If an attacker can trick a user into downloading content from
+a different server (via DNS poisioning, or other such means), the author has
+no recourse. Likewise, an attacker who can replace the file on the CDN server
+has the ability to inject arbitrary content.
 
 We can mitigate the risk of these kinds of attacks by allowing authors to
 more clearly explain to the user agent _exactly_ which resource they intend
@@ -66,12 +67,11 @@ cross-origin.
 3.  (potentially) Relax mixed-content warnings for resources whose
     integrity is verified.
 
-I'm not sure about #3. Get more detail from the WG about the benifits that
+I'm not sure about #3. Get more detail from the WG about the benefits that
 a fallback system would enable. (mkwst)
 {:.todo}
-</section>
-
-</section>
+</section><!-- /Introduction::Goals -->
+</section><!-- /Introduction -->
 
 <section id="conformance">
 Conformance requirements phrased as algorithms or specific steps can be

@@ -30,12 +30,18 @@ elements with a `digest` attribute that contains a cryptographic hash of
 the contents of the resource the author expects to load. For instance, an
 author may wish to load jQuery from a shared server rather than hosting it
 on their own origin. Specifying that the _expected_ SHA-256 hash of
-[`https://code.jquery.com/jquery-1.10.2.min.js`][1]
+`https://code.jquery.com/jquery-1.10.2.min.js`
 is `C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg` means
 that the user agent can verify that the data it loads from that URL matches
 that expected hash before executing the JavaScript it contains. This
 integrity verification significantly reduces the risk that an active
 network attacker can substitute malicious content.
+
+This example can be communicated to a user agent by adding the hash to a
+`script` element, like so:
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"
+            digest="ni:///sha-256;C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg">
 
 The mechanism specified here may also be useful for purposes other than
 validation. User agents may decide to use digests as identifiers in a
@@ -65,7 +71,6 @@ a fallback system would enable. (mkwst)
 {:.todo}
 </section>
 
-[1]: curl https://code.jquery.com/jquery-1.10.2.min.js
 </section>
 
 <section id="conformance">

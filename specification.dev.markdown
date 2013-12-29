@@ -175,6 +175,11 @@ cryptographic hash functions for use as part of a resource's
    <var>encodedResult</var>.
 5. Return <var>encodedResult</var>.
 
+TODO: It's not clear that "binary representation of the entity body ..."
+does what we want. I don't think we yet have a good way of saying "bits
+on the wire". See [bzbarsky's WG post on this topic][bz]
+{:.todo}
+
 [apply-algorithm]: #apply-algorithm-to-resource
 </section>
 <section>
@@ -284,11 +289,6 @@ Insert the following steps after step 5 of step 14 of HTML5's
             at the element, and abort these steps.
         2.  If the document's [integrity policy][] is `fallback`...
 {:start="6"}
-
-TODO: It's not clear that "binary representation of the entity body ..."
-does what we want. I don't think we yet have a good way of saying "bits
-on the wire". See [bzbarsky's WG post on this topic][bz]
-{:.todo}
 
 [prepare]: http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script
 [fetching algorithm]: http://www.w3.org/TR/html5/infrastructure.html#fetch

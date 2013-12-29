@@ -279,6 +279,46 @@ mechansism that isn't specified yet.
 ##### Elements
 
 <section>
+###### The `iframe` element
+
+When content is to be loaded into the [child browsing context][] created
+by an `iframe` element that has a non-empty `digest` attribute:
+
+*   The user agent MUST delay rendering the content until the
+    [fetching algorithm][]'s task to [process request end-of-file][]
+    completes.
+*   When the [process request end-of-file][] task completes:
+    1.  Let <var>digest</var> be the value of the document's browsing context
+        owner `iframe` element's `digest` attribute.
+    2.  Let <var>resource</var> be the response returned from the fetching
+        algorithm.
+    3.  If [<var>resource</var> does not match <var>digest</var>][match]:
+        1. If <var>resource</var> is same-origin with the document's browsing
+           context owner `iframe` element's Document, then [queue a task][]
+           to [fire a simple event][] named `error` at the `iframe` element
+           (this will not fire for cross-origin requests, to avoid leaking
+           data about those resource's content).
+        2. [Navigate][] the child browsing context to `about:blank`.
+  
+
+How does this effect things like the preload scanner? How much work is it
+going to be for vendors to change the "display whatever we've got, ASAP!"
+behavior that makes things fast for users? How much impact will there be
+on user experience, especially for things like ads, where this kind of
+validation has the most value?
+{:.todo}
+
+How do we deal with navigations in the child browsing context? Are they
+simply disallowed? If so, does that make sense? It might for ads, but
+what about other use-cases?
+{:.todo}
+
+[child browsing context]: http://www.w3.org/TR/html5/browsers.html#child-browsing-context
+[navigate]: http://www.w3.org/TR/html5/browsers.html#navigate
+[process request end-of-file]: http://fetch.spec.whatwg.org/#process-request-end-of-file
+</section><!-- /Framework::HTML::iframe -->
+
+<section>
 ###### The `script` element
 
 Insert the following steps after step 5 of step 14 of HTML5's
@@ -291,15 +331,15 @@ Insert the following steps after step 5 of step 14 of HTML5's
         algorithm.
     2.  If [<var>resource</var> does not match <var>digest</var>][match]:
         1.  If the document's [integrity policy][] is `block`, [queue a
-            task][queue] to [fire a simple event][fire-simple] named `error`
+            task][] to [fire a simple event][] named `error`
             at the element, and abort these steps.
         2.  If the document's [integrity policy][] is `fallback`...
 {:start="6"}
 
 [prepare]: http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script
 [fetching algorithm]: http://www.w3.org/TR/html5/infrastructure.html#fetch
-[queue]: http://www.w3.org/TR/html5/webappapis.html#queue-a-task
-[fire-simple]: http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event
+[queue a task]: http://www.w3.org/TR/html5/webappapis.html#queue-a-task
+[fire a simple event]: http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event
 [entity body]: #dfn-entity-body
 [bz]: http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html
 </section><!-- /Framework::HTML::Elements::script -->
@@ -313,7 +353,6 @@ following set of elements:
 
 * audio
 * embed
-* iframe
 * img
 * link
 * object

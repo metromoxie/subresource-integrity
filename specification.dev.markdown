@@ -165,15 +165,15 @@ cryptographic hash functions for use as part of a resource's
 <section>
 #### Apply <var>algorithm</var> to <var>resource</var>
 
-1. If <var>algorithm</var> is not a hash function recognized and supported
-   by the user agent, return `null`.
-2. Let <var>result</var> be the result of applying <var>algorithm</var> to
-   the binary representation of the [entity body][] of <var>resource</var>.
-3. Let <var>encodedResult</var> be result of base64url-encoding
-   <var>result</var>.
-4. Strip any trailing U+003D EQUALS SIGN (`=`) characters from
-   <var>encodedResult</var>.
-5. Return <var>encodedResult</var>.
+1.  If <var>algorithm</var> is not a hash function recognized and supported
+    by the user agent, return `null`.
+2.  Let <var>result</var> be the result of applying <var>algorithm</var> to
+    the binary representation of the [entity body][] of <var>resource</var>.
+3.  Let <var>encodedResult</var> be result of base64url-encoding
+    <var>result</var>.
+4.  Strip any trailing U+003D EQUALS SIGN (`=`) characters from
+    <var>encodedResult</var>.
+5.  Return <var>encodedResult</var>.
 
 TODO: It's not clear that "binary representation of the entity body ..."
 does what we want. I don't think we yet have a good way of saying "bits
@@ -185,25 +185,25 @@ on the wire". See [bzbarsky's WG post on this topic][bz]
 <section>
 #### Does <var>resource</var> match <var>digest</var>?
 
-1. If <var>digest</var> is the empty string, return `true`.
-2. If <var>resource</var>'s scheme is `about` and scheme data is `blank`,
-   return `true`.
-3. If <var>digest</var> is not a valid "named information" (`ni`) URI,
-   return `false`.
-4. Let <var>algorithm</var> be the <var>alg</var> component of
-   <var>digest</var>.
-5. Let <var>expectedValue</var> be the <var>val</var> component of
-   <var>digest</var>.
-6. Let <var>expectedType</var> be the value of <var>digest</var>'s `ct`
-   query string parameter.
-7. If <var>expectedType</var> is not the empty string, and is not a
-   case-insensitive match for <var>resource</var>'s MIME type,
-   return `false`.
-8. Let <var>actualValue</var> be the result of [applying
-   <var>algorithm</var> to <var>resource</var>][apply-algorithm].
-9. If <var>actualValue</var> is `null`, return `false`.
-10.If <var>actualValue</var> is a case-sensitive match for
-   <var>expectedValue</var>, return `true`. Otherwise, return `false`.
+1.  If <var>digest</var> is the empty string, return `true`.
+2.  If <var>resource</var>'s scheme is `about` and scheme data is `blank`,
+    return `true`.
+3.  If <var>digest</var> is not a valid "named information" (`ni`) URI,
+    return `false`.
+4.  Let <var>algorithm</var> be the <var>alg</var> component of
+    <var>digest</var>.
+5.  Let <var>expectedValue</var> be the <var>val</var> component of
+    <var>digest</var>.
+6.  Let <var>expectedType</var> be the value of <var>digest</var>'s `ct`
+    query string parameter.
+7.  If <var>expectedType</var> is not the empty string, and is not a
+    case-insensitive match for <var>resource</var>'s MIME type,
+    return `false`.
+8.  Let <var>actualValue</var> be the result of [applying
+    <var>algorithm</var> to <var>resource</var>][apply-algorithm].
+9.  If <var>actualValue</var> is `null`, return `false`.
+10. If <var>actualValue</var> is a case-sensitive match for
+    <var>expectedValue</var>, return `true`. Otherwise, return `false`.
 
 [match]: #does-resource-match-digest
 </section>

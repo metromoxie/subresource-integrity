@@ -111,11 +111,12 @@ a fetched resource has been delivered without unexpected manipulation.</p>
   <p>It is rare indeed to find a self-contained document on the web. Instead, we
 interact with collages of resources loaded from a variety of origins. User
 agents fetch these resources blindly; data that comes in is accepted as
-canonical, rendered or executed, and cached. Users are left open to a number
-of attack vectors that might change the content of resources in such a way
-as to produce something maliciously different from the author&rsquo;s intent. DNS
-poisoning, man-in-the-middle, and so on are examples that are regularly seen
-in the wild.</p>
+canonical, rendered or executed, and cached. Authors must trust that the
+resource their content delivery network delivers is in fact the same resource
+they expect. If an attacker can trick a user into downloading content from
+a different server (via DNS poisioning, or other such means), the author has
+no recourse. Likewise, an attacker who can replace the file on the CDN server
+has the ability to inject arbitrary content.</p>
 
   <p>We can mitigate the risk of these kinds of attacks by allowing authors to
 more clearly explain to the user agent <em>exactly</em> which resource they intend
@@ -124,7 +125,7 @@ bare URL, then the user agent can validate that the data fetched from the
 URL provied actually matches the authors&rsquo; intent.</p>
 
   <p>This document specifies such a validation scheme, extending several HTML
-elements with a <code>digest</code> attribute that contains a cryptographic hash of
+elements with a <code>integrity</code> attribute that contains a cryptographic hash of
 the contents of the resource the author expects to load. For instance, an
 author may wish to load jQuery from a shared server rather than hosting it
 on their own origin. Specifying that the <em>expected</em> SHA-256 hash of
@@ -139,13 +140,14 @@ network attacker can substitute malicious content.</p>
 <code>script</code> element, like so:</p>
 
   <pre><code>&lt;script src="https://code.jquery.com/jquery-1.10.2.min.js"
-        digest="ni:///sha-256;C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg"&gt;
+        integrity="ni:///sha-256;C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg"&gt;
 </code></pre>
 
   <p>The mechanism specified here may also be useful for purposes other than
-validation. User agents may decide to use digests as identifiers in a
-local cache, for instance, meaning that common resources could be cached
-cross-origin.</p>
+validation. User agents may decide to use the integrity metadata as an
+identifier in a local cache, for instance, meaning that common resources
+(for example, JavaScript libraries) could be cached and retrieved regardless
+of their URL.</p>
 
   <section>
     <h3 id="goals">Goals</h3>
@@ -171,11 +173,12 @@ integrity is verified.</p>
       </li>
     </ol>
 
-    <p class="todo">I&rsquo;m not sure about #3. Get more detail from the WG about the benifits that
+    <p class="todo">I&rsquo;m not sure about #3. Get more detail from the WG about the benefits that
 a fallback system would enable. (mkwst)</p>
   </section>
-
+  <!-- /Introduction::Goals -->
 </section>
+<!-- /Introduction -->
 
 <section id="conformance">
   <p>Conformance requirements phrased as algorithms or specific steps can be
@@ -311,18 +314,18 @@ on the wire&rdquo;. See <a href="http://lists.w3.org/Archives/Public/public-weba
 
     </section>
     <section>
-      <h4 id="does-varresourcevar-match-vardigestvar">Does <var>resource</var> match <var>digest</var>?</h4>
+      <h4 id="does-varresourcevar-match-varmetadatavar">Does <var>resource</var> match <var>metadata</var>?</h4>
 
       <ol>
-        <li>If <var>digest</var> is the empty string, return <code>true</code>.</li>
+        <li>If <var>metadata</var> is the empty string, return <code>true</code>.</li>
         <li>If <var>resource</var>&rsquo;s scheme is <code>about</code>, return <code>true</code>.</li>
-        <li>If <var>digest</var> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URI,
+        <li>If <var>metadata</var> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URI,
 return <code>false</code>.</li>
         <li>Let <var>algorithm</var> be the <var>alg</var> component of
-<var>digest</var>.</li>
+<var>metadata</var>.</li>
         <li>Let <var>expectedValue</var> be the <var>val</var> component of
-<var>digest</var>.</li>
-        <li>Let <var>expectedType</var> be the value of <var>digest</var>&rsquo;s <code>ct</code>
+<var>metadata</var>.</li>
+        <li>Let <var>expectedType</var> be the value of <var>metadata</var>&rsquo;s <code>ct</code>
 query string parameter.</li>
         <li>If <var>expectedType</var> is not the empty string, and is not a
 case-insensitive match for <var>resource</var>&rsquo;s MIME type,
@@ -343,35 +346,35 @@ return <code>false</code>.</li>
     <p>A variety of HTML elements result in requests for resources that are to be
 embedded into the document, or executed in its context. To support integrity
 metadata for each of these, and new elements that are added in the future,
-a new <code>digest</code> attribute is added to HTML5&rsquo;s list of
+a new <code>integrity</code> attribute is added to HTML5&rsquo;s list of
 <a href="http://www.w3.org/TR/html5/dom.html#global-attributes">global attributes</a> that MAY be specified on any HTML element, and
 a corresponding attribute is added to the <a href="http://www.w3.org/TR/html5/dom.html#htmlelement"><code>HTMLElement</code>
 interface</a>.</p>
 
     <section>
-      <h4 id="the-digest-attribute">The <code>digest</code> attribute</h4>
+      <h4 id="the-integrity-attribute">The <code>integrity</code> attribute</h4>
 
-      <p>The <code>digest</code> attribute represents integrity metadata for an element. The
-value of the attribute MUST be either the empty string, or a valid &ldquo;named
+      <p>The <code>integrity</code> attribute represents <a href="#dfn-integrity-metadata">integrity metadata</a> for an element.
+The value of the attribute MUST be either the empty string, or a valid &ldquo;named
 information&rdquo; (<code>ni</code>) URI. [[!RFC6920]]</p>
 
-      <p>The <code>digest</code> IDL attribute must <a href="http://www.w3.org/TR/html5/infrastructure.html#reflect">reflect</a> the <code>digest</code> content attribute.</p>
+      <p>The <code>integrity</code> IDL attribute must <a href="http://www.w3.org/TR/html5/infrastructure.html#reflect">reflect</a> the <code>integrity</code> content attribute.</p>
 
     </section>
-    <!-- /Framework::HTML::digest -->
+    <!-- /Framework::HTML::integrity -->
 
     <section>
       <h4 id="the-noncanonical-src-attribute">The <code>noncanonical-src</code> attribute</h4>
 
       <div class="todo">
         <p>The idea is that conformant browsers would first try to load resources from
-the <code>noncanonical-src</code> attribute&rsquo;s URL iff a <code>digest</code> attribute is present.
+the <code>noncanonical-src</code> attribute&rsquo;s URL iff a <code>integrity</code> attribute is present.
 Then, if the resource failed to match the digest, the user agent would
 fall back to the <code>src</code> attribute&rsquo;s URL. That is:</p>
 
         <pre><code>&lt;script src="http://example.com/script.js"
         noncanonical-src="http://cdn.example.com/script.js"
-        digest="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;
+        integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;
 </code></pre>
 
         <p>The noncanonical resource would be fetched with its <a href="http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode">omit credentials
@@ -391,8 +394,8 @@ discuss things a bit more. (mkwst)</p>
       <h4 id="htmlelement-extension">HTMLElement extension</h4>
 
       <dl title="partial interface HTMLElement" class="idl">
-        <dt>attribute DOMString digest</dt>
-        <dd>The value of this element&rsquo;s <code>digest</code> attribute</dd>
+        <dt>attribute DOMString integrity</dt>
+        <dd>The value of this element&rsquo;s <code>integrity</code> attribute</dd>
       </dl>
     </section>
     <!-- /Framework::HTML::HTMLElement -->
@@ -413,11 +416,11 @@ directive-value: "block" / "report" / "fallback"
 document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
 
       <p>If the document&rsquo;s integrity policy is <code>block</code>, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST 
+render or execute resources that fail an integrity check, <em>and</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
       <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST 
+render or execute resources that fail an integrity check, <em>and</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
       <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST refuse
@@ -425,7 +428,8 @@ to render or execute resources that fail an integrity check, <em>and</em>
 MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>. The user agent MAY additionally choose to load
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
-execute the resource, <em>and</em> MUST [report a(nother) violation][].</p>
+execute the resource, <em>and</em> MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a(nother)
+violation</a>.</p>
 
     </section>
 
@@ -436,7 +440,7 @@ execute the resource, <em>and</em> MUST [report a(nother) violation][].</p>
         <h6 id="the-iframe-element">The <code>iframe</code> element</h6>
 
         <p>When content is to be loaded into the <a href="http://www.w3.org/TR/html5/browsers.html#child-browsing-context">child browsing context</a> created
-by an <code>iframe</code> element that has a non-empty <code>digest</code> attribute:</p>
+by an <code>iframe</code> element that has a non-empty <code>integrity</code> attribute:</p>
 
         <ul>
           <li>The user agent MUST delay rendering the content until the
@@ -444,11 +448,11 @@ by an <code>iframe</code> element that has a non-empty <code>digest</code> attri
 completes.</li>
           <li>When the <a href="http://fetch.spec.whatwg.org/#process-request-end-of-file">process request end-of-file</a> task completes:
             <ol>
-              <li>Let <var>digest</var> be the value of the document&rsquo;s browsing context
-owner <code>iframe</code> element&rsquo;s <code>digest</code> attribute.</li>
+              <li>Let <var>metadata</var> be the value of the document&rsquo;s browsing context
+owner <code>iframe</code> element&rsquo;s <code>integrity</code> attribute.</li>
               <li>Let <var>resource</var> be the response returned from the fetching
 algorithm.</li>
-              <li>If <a href="#does-resource-match-digest"><var>resource</var> does not match <var>digest</var></a>:
+              <li>If <a href="#does-resource-match-metadata"><var>resource</var> does not match <var>metadata</var></a>:
                 <ol>
                   <li>If <var>resource</var> is same-origin with the document&rsquo;s browsing
 context owner <code>iframe</code> element&rsquo;s Document, then <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a>
@@ -482,13 +486,14 @@ what about other use-cases?</p>
 <a href="http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script">&ldquo;prepare a script&rdquo; algorithm</a>:</p>
 
         <ol start="6">
-          <li>Let <var>digest</var> be the value of the element&rsquo;s <code>digest</code> attribute.</li>
-          <li>If <var>digest</var> is the empty string, skip the remaining steps.</li>
+          <li>Let <var>metadata</var> be the value of the element&rsquo;s <code>integrity</code>
+attribute.</li>
+          <li>If <var>metadata</var> is the empty string, skip the remaining steps.</li>
           <li>Once the <a href="http://www.w3.org/TR/html5/infrastructure.html#fetch">fetching algorithm</a> has completed:
             <ol>
               <li>Let <var>resource</var> be the response returned from the fetching
 algorithm.</li>
-              <li>If <a href="#does-resource-match-digest"><var>resource</var> does not match <var>digest</var></a>:
+              <li>If <a href="#does-resource-match-metadata"><var>resource</var> does not match <var>metadata</var></a>:
                 <ol>
                   <li>If the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
 task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code>
@@ -538,23 +543,23 @@ ideas. Or at least opinions.</p>
 
       <p>Idea #1: add an <code>@integrity</code> block at the beginning of a CSS file that
 contains a list of <code>@resource</code> rules, each containing a <code>url()</code> and a
-<code>digest()</code>. Something like:</p>
+<code>integrity()</code>. Something like:</p>
 
       <pre><code>@integrity {
     @resource: url(http://example.com/cat.gif)
-               digest(ni:///sha-256;3587cb776ce0e4...c838c423);
+               integrity(ni:///sha-256;3587cb776ce0e4...c838c423);
     @resource: url(http://not-example.com/another-cat.gif)
-               digest(ni:///sha-256;kljhfigrregq34...298jndkd);
+               integrity(ni:///sha-256;kljhfigrregq34...298jndkd);
 }
 </code></pre>
 
-      <p>Idea #2: add a <code>digest()</code> to each instance where we load a URL (this
+      <p>Idea #2: add a <code>integrity()</code> to each instance where we load a URL (this
 is a poor general solution because repetition, but might work for
 one-offs if we think those are more likely). Something like:</p>
 
       <pre><code>.awesomeness {
     background-image: url(http://example.com/cat.gif)
-                      digest(ni:///sha-256;3587cb776ce0e4...c838c423);
+                      integrity(ni:///sha-256;3587cb776ce0e4...c838c423);
 }
 </code></pre>
 
@@ -563,7 +568,7 @@ one-offs if we think those are more likely). Something like:</p>
       <pre><code>@font-face {
     font-family: IntegralFont;
     src: url(font.woff)
-         digest(ni:///sha-256;3587cb776ce0e4...c838c423);
+         integrity(ni:///sha-256;3587cb776ce0e4...c838c423);
 }
 </code></pre>
 
@@ -600,6 +605,99 @@ I want to load over XHR?</p>
 <!-- /Framework -->
 
 <section>
+  <h3 id="caching">Caching</h3>
+
+  <p>JavaScript libraries are a good example of resources that are often loaded
+and reloaded from different locations as users browse the web:
+<code>http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js</code> is
+exactly the same file as
+<code>https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js</code>. Both
+files are identifiable via the <code>ni</code> URL
+<code>ni:///sha-256;iaFenEC8axSAnyNu6M0-0epCOTwfbKVceFXNd5s_ki4</code>.</p>
+
+  <p>To reduce the performance impact of reloading the same data, user agents
+MAY use <a href="#dfn-integrity-metadata">integrity metadata</a> as a new index to a local cache, meaning that
+a user who had already loaded a version of the file from <code>ajax.googleapis.com</code>
+wouldn&rsquo;t have to touch the network to load the <code>cdnjs.cloudflare.com</code> version.
+The user agent knows that the content is the same, and would be free to treat
+the latter as a cache hit, regardless of the location mismatch.</p>
+
+  <section>
+    <h4 id="risks">Risks</h4>
+
+    <p>This approach is good for performance, but potentially bad for security. See
+the <a href="#origin-confusion">origin confusion</a> and <a href="#mime-type-confusion">MIME type confusion</a> sections below for some
+details.</p>
+
+    <section>
+      <h5 id="origin-confusion">Origin confusion</h5>
+
+      <p>User agents which set up a caching mechanism that uses only the integrity
+metadata to identify a resource are vulnerable to attacks which bypass
+same-origin restrictions unless they are very careful when choosing whether
+or not to read data straight from the cache.</p>
+
+      <p>For instance:</p>
+
+      <ul>
+        <li>
+          <p><a href="http://www.w3.org/TR/html5/webappapis.html#runtime-script-errors">Runtime script errors</a> are sanitized for resources that are
+<a href="http://www.w3.org/TR/html5/infrastructure.html#cors-cross-origin">CORS-cross-origin</a> to the page into which they are loaded. [[!HTML5]]</p>
+        </li>
+        <li>
+          <p>XMLHttpRequest may only load data from same-origin resources, or from
+resources delivered with proper CORS headers. [[!XMLHTTPREQUEST]]</p>
+        </li>
+      </ul>
+
+      <p class="todo">TODO: Moar.</p>
+
+    </section>
+    <!-- /Caching::Risks::Origin confusion -->
+
+    <section>
+      <h5 id="mime-type-confusion">MIME type confusion</h5>
+
+      <p>User agents which set up a caching mechanism that uses only the integrity
+metadata to identify a resource are vulnerable to attacks which create
+resources that behave differently based on the context in which they are
+loaded. <a href="http://en.wikipedia.org/wiki/Gifar">Gifar</a> is the canonical example of such an attack.</p>
+
+      <p>Authors SHOULD mitigate this risk by specifing the expected content type
+along with the digest, as specified in <a href="http://tools.ietf.org/html/rfc6920#section-3.1">RFC 6920, section 3.1</a>.
+This means that the content type will be verified along with the digest when
+determining whether a <a href="#does-resource-match-metadata">resource matches certain integrity
+metadata</a>.</p>
+
+    </section>
+    <!-- /Caching::Risks::MIME Type confusion -->
+  </section>
+  <!-- /Caching::Risks -->
+
+  <section>
+    <h4 id="recommendations">Recommendations</h4>
+
+    <p>To mitigate the risk of cross-origin data leakage or type-sniffing
+exploitation, user agents that take this approach to caching SHOULD use
+<a href="#dfn-integrity-metadata">integrity metadata</a> as a cache identifier <em>only</em> when the
+following are true:</p>
+
+    <ul>
+      <li>The integrity metadata contains a content type.</li>
+      <li>The resource was delivered with an <code>Access-Control-Allow-Origin</code> HTTP
+header with a value of <code>*</code> [[!CORS]]</li>
+      <li>The integrity metadata uses a hash function with very strong uniqueness
+characteristics: SHA-512 or better.</li>
+    </ul>
+
+    <p class="todo">TODO: More ideas? Limiting to resources with wide-open CORS headers and strong
+hash functions seems like a reasonable start&hellip;</p>
+  </section>
+  <!-- /Caching::Recommendations -->
+</section>
+<!-- /Caching -->
+
+<section>
   <h2 id="implementation-considerations">Implementation Considerations</h2>
 
   <section>
@@ -623,9 +721,9 @@ the page as well as the resources to keep the digests up to date.</p>
   <section>
     <h3 id="insecure-channels-remain-insecure">Insecure channels remain insecure</h3>
 
-    <p>A digest delivered over an insecure channel provides no security benefit.
-Attackers can alter the digest in-flight (or remove it entirely (or do
-absolutely anything else to the document)), just as they could alter the
+    <p><a href="#dfn-integrity-metadata">Integrity metadata</a> delivered over an insecure channel provides no security
+benefit. Attackers can alter the digest in-flight (or remove it entirely (or
+do absolutely anything else to the document)), just as they could alter the
 resource the hash is meant to validate. Authors who desire any sort of
 security whatsoever SHOULD deliver resources containing digests over
 secure channels.</p>
@@ -644,49 +742,6 @@ on a regular basis, and deprecate support for those functions shown to be
 insecure.</p>
   </section>
   <!-- /Security::Hash collision -->
-
-  <section>
-    <h3 id="origin-confusion">Origin confusion</h3>
-
-    <p>User agents which set up a caching mechanism that uses only the digest to
-identify a resource are vulnerable to attacks which bypass same-origin
-restrictions unless they are very careful when choosing whether or not to
-read data straight from the cache.</p>
-
-    <p>For instance:</p>
-
-    <ul>
-      <li>
-        <p><a href="http://www.w3.org/TR/html5/webappapis.html#runtime-script-errors">Runtime script errors</a> are sanitized for resources that are
-<a href="http://www.w3.org/TR/html5/infrastructure.html#cors-cross-origin">CORS-cross-origin</a> to the page into which they are loaded. [[!HTML5]]</p>
-      </li>
-      <li>
-        <p>XMLHttpRequest may only load data from same-origin resources, or from
-resources delivered with proper CORS headers. [[!XMLHTTPREQUEST]]</p>
-      </li>
-    </ul>
-
-    <p class="todo">TODO: Moar.</p>
-
-  </section>
-  <!-- /Security::Origin confusion -->
-
-  <section>
-    <h3 id="mime-type-confusion">MIME type confusion</h3>
-
-    <p>User agents which set up a caching mechanism that uses only the digest to
-identify a resource are vulnerable to attacks which create resources that
-behave differently based on the context in which they are loaded. <a href="http://en.wikipedia.org/wiki/Gifar">Gifar</a>
-is the canonical example of such an attack.</p>
-
-    <p>Authors SHOULD mitigate this risk by specifing the expected content type
-along with the digest, as specified in <a href="http://tools.ietf.org/html/rfc6920#section-3.1">RFC 6920, section 3.1</a>,
-and verifying that the content type of the resource matches the expectations
-of the context into which it is loaded. For instance, a resource of type
-<code>text/plain</code> loaded via a <code>script</code> element MUST not execute.</p>
-
-  </section>
-  <!-- /Security::MIME Type confusion -->
 
 </section>
 <!-- /Security -->

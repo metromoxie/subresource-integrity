@@ -192,10 +192,15 @@ on the wire". See [bzbarsky's WG post on this topic][bz]
    <var>digest</var>.
 4. Let <var>expectedValue</var> be the <var>val</var> component of
    <var>digest</var>.
-5. Let <var>actualValue</var> be the result of [applying
+5. Let <var>expectedType</var> be the value of <var>digest</var>'s `ct`
+   query string parameter.
+6. If <var>expectedType</var> is not the empty string, and is not a
+   case-insensitive match for <var>resource</var>'s MIME type,
+   return `false`.
+7. Let <var>actualValue</var> be the result of [applying
    <var>algorithm</var> to <var>resource</var>][apply-algorithm].
-6. If <var>actualValue</var> is `null`, return `false`.
-7. If <var>actualValue</var> is a case-sensitive match for
+8. If <var>actualValue</var> is `null`, return `false`.
+9. If <var>actualValue</var> is a case-sensitive match for
    <var>expectedValue</var>, return `true`. Otherwise, return `false`.
 
 [match]: #does-resource-match-digest

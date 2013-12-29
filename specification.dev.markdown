@@ -42,6 +42,29 @@ validation. User agents may decide to use digests as identifiers in a
 local cache, for instance, meaning that common resources could be cached
 cross-origin.
 
+<section>
+### Goals
+
+1.  Provide authors with a mechanism of reducing the ambient authority
+    of a host (e.g. a content delivery network, or a social network that
+    provides widgets) from whom they wish to include JavaScript. Authors
+    should be able to grant authority to load _a_ script, not _any_
+    script, and compromise of the third-party service should not
+    automatically mean compromise of every site which includes its
+    scripts.
+
+2.  Improved cachability of common resources: if the user agent downloads
+    jQuery once, it shouldn't have to download it again, even if it comes
+    from a new URL.
+
+3.  (potentially) Relax mixed-content warnings for resources whose
+    integrity is verified.
+
+I'm not sure about #3. Get more detail from the WG about the benifits that
+a fallback system would enable. (mkwst)
+{:.todo}
+</section>
+
 [1]: curl https://code.jquery.com/jquery-1.10.2.min.js
 </section>
 

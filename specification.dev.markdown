@@ -186,21 +186,23 @@ on the wire". See [bzbarsky's WG post on this topic][bz]
 #### Does <var>resource</var> match <var>digest</var>?
 
 1. If <var>digest</var> is the empty string, return `true`.
-2. If <var>digest</var> is not a valid "named information" (`ni`) URI,
+2. If <var>resource</var>'s scheme is `about` and scheme data is `blank`,
+   return `true`.
+3. If <var>digest</var> is not a valid "named information" (`ni`) URI,
    return `false`.
-3. Let <var>algorithm</var> be the <var>alg</var> component of
+4. Let <var>algorithm</var> be the <var>alg</var> component of
    <var>digest</var>.
-4. Let <var>expectedValue</var> be the <var>val</var> component of
+5. Let <var>expectedValue</var> be the <var>val</var> component of
    <var>digest</var>.
-5. Let <var>expectedType</var> be the value of <var>digest</var>'s `ct`
+6. Let <var>expectedType</var> be the value of <var>digest</var>'s `ct`
    query string parameter.
-6. If <var>expectedType</var> is not the empty string, and is not a
+7. If <var>expectedType</var> is not the empty string, and is not a
    case-insensitive match for <var>resource</var>'s MIME type,
    return `false`.
-7. Let <var>actualValue</var> be the result of [applying
+8. Let <var>actualValue</var> be the result of [applying
    <var>algorithm</var> to <var>resource</var>][apply-algorithm].
-8. If <var>actualValue</var> is `null`, return `false`.
-9. If <var>actualValue</var> is a case-sensitive match for
+9. If <var>actualValue</var> is `null`, return `false`.
+10.If <var>actualValue</var> is a case-sensitive match for
    <var>expectedValue</var>, return `true`. Otherwise, return `false`.
 
 [match]: #does-resource-match-digest

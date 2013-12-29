@@ -146,6 +146,35 @@ network attacker can substitute malicious content.</p>
 validation. User agents may decide to use digests as identifiers in a
 local cache, for instance, meaning that common resources could be cached
 cross-origin.</p>
+
+  <section>
+    <h3 id="goals">Goals</h3>
+
+    <ol>
+      <li>
+        <p>Provide authors with a mechanism of reducing the ambient authority
+of a host (e.g. a content delivery network, or a social network that
+provides widgets) from whom they wish to include JavaScript. Authors
+should be able to grant authority to load <em>a</em> script, not <em>any</em>
+script, and compromise of the third-party service should not
+automatically mean compromise of every site which includes its
+scripts.</p>
+      </li>
+      <li>
+        <p>Improved cachability of common resources: if the user agent downloads
+jQuery once, it shouldn&rsquo;t have to download it again, even if it comes
+from a new URL.</p>
+      </li>
+      <li>
+        <p>(potentially) Relax mixed-content warnings for resources whose
+integrity is verified.</p>
+      </li>
+    </ol>
+
+    <p class="todo">I&rsquo;m not sure about #3. Get more detail from the WG about the benifits that
+a fallback system would enable. (mkwst)</p>
+  </section>
+
 </section>
 
 <section id="conformance">
@@ -220,7 +249,8 @@ resource&rsquo;s integrity. The MIME type SHOULD be provided, as it mitigates th
 risk of certain attack vectors (see <a href="#mime-type-confusion">MIME Type confusion</a> in
 this document&rsquo;s Security Considerations section).</p>
 
-    <p>This metadata is generally encoded as a &ldquo;named information&rdquo; (<code>ni</code>) URI, as defined in RFC6920. [[!RFC6920]]</p>
+    <p>This metadata is generally encoded as a &ldquo;named information&rdquo; (<code>ni</code>) URI, as
+defined in RFC6920. [[!RFC6920]]</p>
 
     <p>For example, given a resource containing only the string &ldquo;Hello, world!&rdquo;,
 an author might choose <a href="#dfn-sha-2">SHA-256</a> as a hash function.
@@ -331,6 +361,33 @@ information&rdquo; (<code>ni</code>) URI. [[!RFC6920]]</p>
     <!-- /Framework::HTML::digest -->
 
     <section>
+      <h4 id="the-noncanonical-src-attribute">The <code>noncanonical-src</code> attribute</h4>
+
+      <div class="todo">
+        <p>The idea is that conformant browsers would first try to load resources from
+the <code>noncanonical-src</code> attribute&rsquo;s URL iff a <code>digest</code> attribute is present.
+Then, if the resource failed to match the digest, the user agent would
+fall back to the <code>src</code> attribute&rsquo;s URL. That is:</p>
+
+        <pre><code>&lt;script src="http://example.com/script.js"
+        noncanonical-src="http://cdn.example.com/script.js"
+        digest="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;
+</code></pre>
+
+        <p>The noncanonical resource would be fetched with its <a href="http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode">omit credentials
+mode</a> set to <code>always</code>, to prevent leakage of cookies across insecure
+channels.</p>
+
+        <p>This only makes sense if we care about allowing cache-friendly (read &ldquo;HTTP&rdquo;)
+URLs to load in an HTTPS context without warnings. I&rsquo;m not sure we do, so
+I&rsquo;m not going to put too much thought into the details here before we
+discuss things a bit more. (mkwst)</p>
+      </div>
+
+    </section>
+    <!-- /Framework::HTML::noncanonical-src -->
+
+    <section>
       <h4 id="htmlelement-extension">HTMLElement extension</h4>
 
       <dl title="partial interface HTMLElement" class="idl">
@@ -356,16 +413,19 @@ directive-value: "block" / "report" / "fallback"
 document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
 
       <p>If the document&rsquo;s integrity policy is <code>block</code>, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> must 
+render or execute resources that fail an integrity check, <em>and</em> MUST 
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
       <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY refuse to
 render or execute resources that fail an integrity check, <em>and</em> MUST 
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST
-<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>, and MAY load a fallback resource via a TODO
-mechansism that isn&rsquo;t specified yet.</p>
+      <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST refuse
+to render or execute resources that fail an integrity check, <em>and</em>
+MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>. The user agent MAY additionally choose to load
+a fallback resource as specified for each relevant element. If the fallback
+resource fails an integrity check, the user agent MUST refuse to render or
+execute the resource, <em>and</em> MUST [report a(nother) violation][].</p>
 
     </section>
 

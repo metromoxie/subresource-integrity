@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" typeof="bibo:Document " about="" property="dcterms:language" content="en">
+<html>
 <head>
   <meta charset="utf-8">
   <title>Subresource Integrity</title>
-  
+  <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
   <script>
     var respecConfig = {
         // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
@@ -94,525 +94,26 @@
       border-color: #52E052;
     }
   </style>
-<style>/*****************************************************************
- * ReSpec 3 CSS
- * Robin Berjon - http://berjon.com/
- *****************************************************************/
-
-/* --- INLINES --- */
-em.rfc2119 { 
-    text-transform:     lowercase;
-    font-variant:       small-caps;
-    font-style:         normal;
-    color:              #900;
-}
-
-h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
-h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
-    border: none;
-}
-
-dfn {
-    font-weight:    bold;
-}
-
-a.internalDFN {
-    color:  inherit;
-    border-bottom:  1px solid #99c;
-    text-decoration:    none;
-}
-
-a.externalDFN {
-    color:  inherit;
-    border-bottom:  1px dotted #ccc;
-    text-decoration:    none;
-}
-
-a.bibref {
-    text-decoration:    none;
-}
-
-cite .bibref {
-    font-style: normal;
-}
-
-code {
-    color:  #ff4500;
-}
-
-/* --- TOC --- */
-.toc a, .tof a {
-    text-decoration:    none;
-}
-
-a .secno, a .figno {
-    color:  #000;
-}
-
-ul.tof, ol.tof {
-    list-style: none outside none;
-}
-
-.caption {
-    margin-top: 0.5em;
-    font-style:   italic;
-}
-
-/* --- TABLE --- */
-table.simple {
-    border-spacing: 0;
-    border-collapse:    collapse;
-    border-bottom:  3px solid #005a9c;
-}
-
-.simple th {
-    background: #005a9c;
-    color:  #fff;
-    padding:    3px 5px;
-    text-align: left;
-}
-
-.simple th[scope="row"] {
-    background: inherit;
-    color:  inherit;
-    border-top: 1px solid #ddd;
-}
-
-.simple td {
-    padding:    3px 10px;
-    border-top: 1px solid #ddd;
-}
-
-.simple tr:nth-child(even) {
-    background: #f0f6ff;
-}
-
-/* --- DL --- */
-.section dd > p:first-child {
-    margin-top: 0;
-}
-
-.section dd > p:last-child {
-    margin-bottom: 0;
-}
-
-.section dd {
-    margin-bottom:  1em;
-}
-
-.section dl.attrs dd, .section dl.eldef dd {
-    margin-bottom:  0;
-}
-</style><style>/* --- ISSUES/NOTES --- */
-div.issue-title, div.note-title {
-    padding-right:  1em;
-    min-width: 7.5em;
-    color: #b9ab2d;
-}
-div.issue-title { color: #e05252; }
-div.note-title { color: #2b2; }
-div.issue-title span, div.note-title span {
-    text-transform: uppercase;
-}
-div.note, div.issue {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-.note > p:first-child, .issue > p:first-child { margin-top: 0 }
-.issue, .note {
-    padding: .5em;
-    border-left-width: .5em;
-    border-left-style: solid;
-}
-div.issue, div.note {
-    padding: 1em 1.2em 0.5em;
-    margin: 1em 0;
-    position: relative;
-    clear: both;
-}
-span.note, span.issue { padding: .1em .5em .15em; }
-
-.issue {
-    border-color: #e05252;
-    background: #fbe9e9;
-}
-.note {
-    border-color: #52e052;
-    background: #e9fbe9;
-}
-
-
-</style><style>/* --- WEB IDL --- */
-pre.idl {
-    border-top: 1px solid #90b8de;
-    border-bottom: 1px solid #90b8de;
-    padding:    1em;
-    line-height:    120%;
-}
-
-pre.idl::before {
-    content:    "WebIDL";
-    display:    block;
-    width:      150px;
-    background: #90b8de;
-    color:  #fff;
-    font-family:    initial;
-    padding:    3px;
-    font-weight:    bold;
-    margin: -1em 0 1em -1em;
-}
-
-.idlType {
-    color:  #ff4500;
-    font-weight:    bold;
-    text-decoration:    none;
-}
-
-/*.idlModule*/
-/*.idlModuleID*/
-/*.idlInterface*/
-.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
-    font-weight:    bold;
-    color:  #005a9c;
-}
-a.idlEnumItem {
-    color:  #000;
-    border-bottom:  1px dotted #ccc;
-    text-decoration: none;
-}
-
-.idlSuperclass {
-    font-style: italic;
-    color:  #005a9c;
-}
-
-/*.idlAttribute*/
-.idlAttrType, .idlFieldType, .idlMemberType {
-    color:  #005a9c;
-}
-.idlAttrName, .idlFieldName, .idlMemberName {
-    color:  #ff4500;
-}
-.idlAttrName a, .idlFieldName a, .idlMemberName a {
-    color:  #ff4500;
-    border-bottom:  1px dotted #ff4500;
-    text-decoration: none;
-}
-
-/*.idlMethod*/
-.idlMethType, .idlCallbackType {
-    color:  #005a9c;
-}
-.idlMethName {
-    color:  #ff4500;
-}
-.idlMethName a {
-    color:  #ff4500;
-    border-bottom:  1px dotted #ff4500;
-    text-decoration: none;
-}
-
-/*.idlCtor*/
-.idlCtorName {
-    color:  #ff4500;
-}
-.idlCtorName a {
-    color:  #ff4500;
-    border-bottom:  1px dotted #ff4500;
-    text-decoration: none;
-}
-
-/*.idlParam*/
-.idlParamType {
-    color:  #005a9c;
-}
-.idlParamName, .idlDefaultValue {
-    font-style: italic;
-}
-
-.extAttr {
-    color:  #666;
-}
-
-/*.idlSectionComment*/
-.idlSectionComment {
-    color: gray;
-}
-
-/*.idlConst*/
-.idlConstType {
-    color:  #005a9c;
-}
-.idlConstName {
-    color:  #ff4500;
-}
-.idlConstName a {
-    color:  #ff4500;
-    border-bottom:  1px dotted #ff4500;
-    text-decoration: none;
-}
-
-/*.idlException*/
-.idlExceptionID {
-    font-weight:    bold;
-    color:  #c00;
-}
-
-.idlTypedefID, .idlTypedefType {
-    color:  #005a9c;
-}
-
-.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
-    color:  #c00;
-    font-weight:    normal;
-}
-
-.excName a {
-    font-family:    monospace;
-}
-
-.idlRaises a.idlType, .excName a.idlType {
-    border-bottom:  1px dotted #c00;
-}
-
-.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
-    width:  45px;
-    text-align: center;
-}
-.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
-.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
-
-.idlImplements a {
-    font-weight:    bold;
-}
-
-dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
-    margin-left:    2em;
-}
-
-.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
-    font-weight:    normal;
-}
-
-.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
-    font-weight:    bold;
-    color:  #000;
-    font-family:    monospace;
-}
-
-.attributes dt code, .fields dt code, .dictionary-members dt code {
-    background:  #ffffd2;
-}
-
-.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
-    color:  #005a9c;
-    background:  transparent;
-    font-family:    inherit;
-    font-weight:    normal;
-    font-style: italic;
-}
-
-.methods dt code {
-    background:  #d9e6f8;
-}
-
-.constants dt code {
-    background:  #ddffd2;
-}
-
-.constructors dt code {
-    background:  #cfc;
-}
-
-.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
-    margin-bottom:  1em;
-}
-
-table.parameters, table.exceptions {
-    border-spacing: 0;
-    border-collapse:    collapse;
-    margin: 0.5em 0;
-    width:  100%;
-}
-table.parameters { border-bottom:  1px solid #90b8de; }
-table.exceptions { border-bottom:  1px solid #deb890; }
-
-.parameters th, .exceptions th {
-    color:  #fff;
-    padding:    3px 5px;
-    text-align: left;
-    font-family:    initial;
-    font-weight:    normal;
-    text-shadow:    #666 1px 1px 0;
-}
-.parameters th { background: #90b8de; }
-.exceptions th { background: #deb890; }
-
-.parameters td, .exceptions td {
-    padding:    3px 10px;
-    border-top: 1px solid #ddd;
-    vertical-align: top;
-}
-
-.parameters tr:first-child td, .exceptions tr:first-child td {
-    border-top: none;
-}
-
-.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
-    width:  100px;
-}
-
-.parameters td.prmType {
-    width:  120px;
-}
-
-table.exceptions table {
-    border-spacing: 0;
-    border-collapse:    collapse;
-    width:  100%;
-}
-</style><link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-ED"><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--></head>
-<body class="h-entry" style="" role="document" id="respecDocument"><div class="head" role="contentinfo" id="respecHeader">
-  <p>
-    
-      <a href="http://www.w3.org/"><img width="72" height="48" src="https://www.w3.org/Icons/w3c_home" alt="W3C"></a>
-    
-  </p>
-  <h1 class="title p-name" id="title" property="dcterms:title">Subresource Integrity</h1>
-  
-  <h2 property="dcterms:issued" datatype="xsd:dateTime" content="2013-12-28T17:31:43.000Z" id="w3c-editor-s-draft-28-december-2013"><abbr title="World Wide Web Consortium">W3C</abbr> Editor's Draft <time class="dt-published" datetime="2013-12-28">28 December 2013</time></h2>
-  <dl>
-    
-      <dt>This version:</dt>
-      <dd><a class="u-url" href="http://todo.com/todo">http://todo.com/todo</a></dd>
-      <dt>Latest published version:</dt>
-      <dd><a href="http://www.w3.org/TR/subresourceintegrity/">http://www.w3.org/TR/subresourceintegrity/</a></dd>
-    
-    
-      <dt>Latest editor's draft:</dt>
-      <dd><a href="http://todo.com/todo">http://todo.com/todo</a></dd>
-    
-    
-    
-    
-      
-    
-    
-    
-    <dt>Editor:</dt>
-    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><a class="u-url url p-name fn" rel="foaf:homepage" property="foaf:name" content="John Smith" href="mailto:w3c@johnsmith.com">John Smith</a>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.google.com/">Google, Inc.</a></span>
-</dd>
-
-    
-    
-  </dl>
-  
-  
-  
-  
-    
-      <p class="copyright">
-        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
-        2013
-        
-        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
-        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
-        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
-        <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), 
-        
-        All Rights Reserved.
-        
-        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
-        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
-        
-          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
-        
-        rules apply.
-      </p>
-    
-  
-  <hr>
-</div>
-<section id="abstract" class="introductory" property="dcterms:abstract" datatype="" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter"><h2 aria-level="1" role="heading" id="h2_abstract">Abstract</h2>
+</head>
+<body>
+<section id="abstract">
   <p>This specification defines a mechanism by which user agents may verify that
 a fetched resource has been delivered without unexpected manipulation.</p>
-</section><section id="sotd" class="introductory" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter"><h2 aria-level="1" role="heading" id="h2_sotd">Status of This Document</h2>
-  
-    
-      
-        <p>
-          <em>This section describes the status of this document at the time of its publication.
-          Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the
-          latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at
-          http://www.w3.org/TR/.</em>
-        </p>
-        
+</section>
+
+<section id="sotd">
   <p>A list of changes to this document may be found at <a href="https://github.com/#TODO">https://github.com/#TODO</a>.</p>
+</section>
 
-        <p>
-          This document was published by the <a href="http://www.w3.org/2011/webappsec/">Web Application Security Working Group</a> as an Editor's Draft.
-          
-          
-            If you wish to make comments regarding this document, please send them to 
-            <a href="mailto:public-webappsec@w3.org">public-webappsec@w3.org</a> 
-            (<a href="mailto:public-webappsec-request@w3.org?subject=subscribe">subscribe</a>,
-            <a href="http://lists.w3.org/Archives/Public/public-webappsec/">archives</a>).
-          
-          
-          
-          
-            All comments are welcome.
-          
-        </p>
-        
-        
-          <p>
-            Publication as an Editor's Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr>
-            Membership. This is a draft document and may be updated, replaced or obsoleted by other
-            documents at any time. It is inappropriate to cite this document as other than work in
-            progress.
-          </p>
-        
-        
-        <p>
-          
-            This document was produced by a group operating under the 
-            <a id="sotd_patent" about="" rel="w3p:patentRules" href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent
-            Policy</a>.
-          
-          
-          
-            
-              <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/49309/status" rel="disclosure">public list of any patent
-              disclosures</a> 
-            
-            made in connection with the deliverables of the group; that page also includes
-            instructions for disclosing a patent. An individual who has actual knowledge of a patent
-            which the individual believes contains
-            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
-            Claim(s)</a> must disclose the information in accordance with
-            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
-            6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
-          
-          
-        </p>
-        
-      
-    
-  
-</section><section id="toc"><h2 class="introductory" aria-level="1" role="heading" id="h2_toc">Table of Contents</h2><ul class="toc" role="directory" id="respecContents"><li class="tocline"><a href="#introduction-1" class="tocxref"><span class="secno">1. </span>Introduction</a></li><li class="tocline"><a href="#conformance" class="tocxref"><span class="secno">2. </span>Conformance</a><ul class="toc"><li class="tocline"><a href="#key-concepts-and-terminology-1" class="tocxref"><span class="secno">2.1 </span>Key Concepts and Terminology</a></li></ul></li><li class="tocline"><a href="#framework-1" class="tocxref"><span class="secno">3. </span>Framework</a><ul class="toc"><li class="tocline"><a href="#integrity-metadata-1" class="tocxref"><span class="secno">3.1 </span>Integrity metadata</a></li><li class="tocline"><a href="#cryptographic-hash-functions-1" class="tocxref"><span class="secno">3.2 </span>Cryptographic hash functions</a></li><li class="tocline"><a href="#resource-verification-algorithms-1" class="tocxref"><span class="secno">3.3 </span>Resource verification algorithms</a><ul class="toc"><li class="tocline"><a href="#apply-algorithm-to-resource" class="tocxref"><span class="secno">3.3.1 </span>Apply <var>algorithm</var> to <var>resource</var></a></li><li class="tocline"><a href="#does-resource-match-digest" class="tocxref"><span class="secno">3.3.2 </span>Does <var>resource</var> match <var>digest</var>?</a></li></ul></li><li class="tocline"><a href="#verification-of-html-document-subresources-1" class="tocxref"><span class="secno">3.4 </span>Verification of HTML document subresources</a><ul class="toc"><li class="tocline"><a href="#the-digest-attribute-1" class="tocxref"><span class="secno">3.4.1 </span>The <code>digest</code> attribute</a></li><li class="tocline"><a href="#htmlelement-extension-1" class="tocxref"><span class="secno">3.4.2 </span>HTMLElement extension</a><ul class="toc"><li class="tocline"><a href="#attributes" class="tocxref"><span class="secno">3.4.2.1 </span>Attributes</a></li></ul></li><li class="tocline"><a href="#handling-integrity-violations-1" class="tocxref"><span class="secno">3.4.3 </span>Handling integrity violations</a></li><li class="tocline"><a href="#elements-1" class="tocxref"><span class="secno">3.4.4 </span>Elements</a><ul class="toc"><li class="tocline"><a href="#the-script-element-1" class="tocxref"><span class="secno">3.4.4.1 </span>The <code>script</code> element</a></li><li class="tocline"><a href="#the-every-other-element-1" class="tocxref"><span class="secno">3.4.4.2 </span>The <code>every-other</code> element</a></li></ul></li></ul></li><li class="tocline"><a href="#verification-of-css-loaded-subresources-1" class="tocxref"><span class="secno">3.5 </span>Verification of CSS-loaded subresources</a></li><li class="tocline"><a href="#verification-of-js-loaded-subresources-1" class="tocxref"><span class="secno">3.6 </span>Verification of JS-loaded subresources</a><ul class="toc"><li class="tocline"><a href="#workers-1" class="tocxref"><span class="secno">3.6.1 </span>Workers</a></li><li class="tocline"><a href="#xmlhttprequest-1" class="tocxref"><span class="secno">3.6.2 </span>XMLHttpRequest</a></li></ul></li></ul></li><li class="tocline"><a href="#implementation-considerations-1" class="tocxref"><span class="secno">4. </span>Implementation Considerations</a><ul class="toc"><li class="tocline"><a href="#proxies-1" class="tocxref"><span class="secno">4.1 </span>Proxies</a></li></ul></li><li class="tocline"><a href="#security-considerations-1" class="tocxref"><span class="secno">5. </span>Security Considerations</a><ul class="toc"><li class="tocline"><a href="#insecure-channels-remain-insecure-1" class="tocxref"><span class="secno">5.1 </span>Insecure channels remain insecure</a></li><li class="tocline"><a href="#hash-collision-attacks-1" class="tocxref"><span class="secno">5.2 </span>Hash collision attacks</a></li><li class="tocline"><a href="#origin-confusion-1" class="tocxref"><span class="secno">5.3 </span>Origin confusion</a></li><li class="tocline"><a href="#mime-type-confusion-1" class="tocxref"><span class="secno">5.4 </span>MIME type confusion</a></li></ul></li><li class="tocline"><a href="#references" class="tocxref"><span class="secno">A. </span>References</a><ul class="toc"><li class="tocline"><a href="#normative-references" class="tocxref"><span class="secno">A.1 </span>Normative references</a></li></ul></li></ul></section>
-
-
-
-<section class="informative" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="introduction-1">
-  <!--OddPage--><h2 id="introduction" aria-level="1" role="heading"><span class="secno">1. </span>Introduction</h2><p><em>This section is non-normative.</em></p>
+<section class="informative">
+  <h2 id="introduction">Introduction</h2>
 
   <p>It is rare indeed to find a self-contained document on the web. Instead, we
 interact with collages of resources loaded from a variety of origins. User
 agents fetch these resources blindly; data that comes in is accepted as
 canonical, rendered or executed, and cached. Users are left open to a number
 of attack vectors that might change the content of resources in such a way
-as to produce something maliciously different from the author’s intent. DNS
+as to produce something maliciously different from the author&rsquo;s intent. DNS
 poisoning, man-in-the-middle, and so on are examples that are regularly seen
 in the wild.</p>
 
@@ -620,7 +121,7 @@ in the wild.</p>
 more clearly explain to the user agent <em>exactly</em> which resource they intend
 to load. If an author can provide integrity metadata above and beyond the
 bare URL, then the user agent can validate that the data fetched from the
-URL provied actually matches the authors’ intent.</p>
+URL provied actually matches the authors&rsquo; intent.</p>
 
   <p>This document specifies such a validation scheme, extending several HTML
 elements with a <code>digest</code> attribute that contains a cryptographic hash of
@@ -641,91 +142,81 @@ cross-origin.</p>
 
 </section>
 
-<section id="conformance" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter"><!--OddPage--><h2 aria-level="1" role="heading" id="h2_conformance"><span class="secno">2. </span>Conformance</h2>
-<p>
-  As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
-  and notes in this specification are non-normative. Everything else in this specification is
-  normative.
-</p>
-<p>
-  The key words <em class="rfc2119" title="MUST">MUST</em>, <em class="rfc2119" title="MUST NOT">MUST NOT</em>, <em class="rfc2119" title="REQUIRED">REQUIRED</em>, <em class="rfc2119" title="SHOULD">SHOULD</em>, <em class="rfc2119" title="SHOULD NOT">SHOULD NOT</em>, <em class="rfc2119" title="RECOMMENDED">RECOMMENDED</em>, <em class="rfc2119" title="MAY">MAY</em>,
-  and <em class="rfc2119" title="OPTIONAL">OPTIONAL</em> in this specification are to be interpreted as described in [<cite><a class="bibref" href="#bib-RFC2119">RFC2119</a></cite>].
-</p>
-
+<section id="conformance">
   <p>Conformance requirements phrased as algorithms or specific steps can be
 implemented in any manner, so long as the end result is equivalent. In
 particular, the algorithms defined in this specification are intended to
 be easy to understand and are not intended to be performant. Implementers
 are encouraged to optimize.</p>
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="key-concepts-and-terminology-1">
-    <h3 id="key-concepts-and-terminology" aria-level="2" role="heading"><span class="secno">2.1 </span>Key Concepts and Terminology</h3>
+  <section>
+    <h3 id="key-concepts-and-terminology">Key Concepts and Terminology</h3>
 
     <p>This section defines several terms used throughout the document.</p>
 
-    <p>The term <dfn id="dfn-digest">digest</dfn> refers to the base64url-encoded result of
+    <p>The term <dfn>digest</dfn> refers to the base64url-encoded result of
 executing a cryptographic hash function on an arbitrary block of data.</p>
 
-    <p>A <dfn id="dfn-secure-channel">secure channel</dfn> is any communication mechanism that the user
-agent has defined as “secure” (typically limited to HTTP over Transport
-Layer Security (TLS) [<cite><a class="bibref" href="#bib-RFC2818">RFC2818</a></cite>]).</p>
+    <p>A <dfn>secure channel</dfn> is any communication mechanism that the user
+agent has defined as &ldquo;secure&rdquo; (typically limited to HTTP over Transport
+Layer Security (TLS) [[!RFC2818]]).</p>
 
-    <p>An <dfn id="dfn-insecure-channel">insecure channel</dfn> is any communication mechanism other than
-those the user agent has defined as “secure”.</p>
+    <p>An <dfn>insecure channel</dfn> is any communication mechanism other than
+those the user agent has defined as &ldquo;secure&rdquo;.</p>
 
-    <p>The term <dfn id="dfn-origin">origin</dfn> is defined in the Origin specification.
-[<cite><a class="bibref" href="#bib-RFC6454">RFC6454</a></cite>]</p>
+    <p>The term <dfn>origin</dfn> is defined in the Origin specification.
+[[!RFC6454]]</p>
 
-    <p>The <dfn id="dfn-mime-type">MIME type</dfn> of a resource is a technical hint about the use
-and format of that resource. [<cite><a class="bibref" href="#bib-MIMETYPE">MIMETYPE</a></cite>]</p>
+    <p>The <dfn>MIME type</dfn> of a resource is a technical hint about the use
+and format of that resource. [[!MIMETYPE]]</p>
 
-    <p>The <dfn id="dfn-entity-body">entity body</dfn> of a resource is defined by the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html">HTTP 1.1
-specification, section 7.2</a>. [<cite><a class="bibref" href="#bib-HTTP11">HTTP11</a></cite>]</p>
+    <p>The <dfn>entity body</dfn> of a resource is defined by the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html">HTTP 1.1
+specification, section 7.2</a>. [[!HTTP11]]</p>
 
-    <p>A <dfn id="dfn-base64url-encoding">base64url encoding</dfn> is defined in
+    <p>A <dfn>base64url encoding</dfn> is defined in
 <a href="http://tools.ietf.org/html/rfc4648#section-5">RFC 4648, section 5</a>. In a nutshell, it replaces the characters
 U+002B PLUS SIGN (<code>+</code>) and U+002F SOLIDUS (<code>/</code>) characters in normal base64
 encoding with the U+002D HYPHEN-MINUS (<code>-</code>) and U+005F LOW LINE (<code>_</code>)
-characters, respectively. [<cite><a class="bibref" href="#bib-RFC4648">RFC4648</a></cite>]</p>
+characters, respectively. [[!RFC4648]]</p>
 
     <p>The Augmented Backus-Naur Form (ABNF) notation used in this document is
-specified in RFC 5234. [<cite><a class="bibref" href="#bib-ABNF">ABNF</a></cite>]</p>
+specified in RFC 5234. [[!ABNF]]</p>
 
-    <p>The <dfn id="dfn-sha-256">SHA-256</dfn>, <dfn id="dfn-sha-384">SHA-384</dfn>, and <dfn id="dfn-sha-512">SHA-512</dfn> are part
-of the <dfn id="dfn-sha-2">SHA-2</dfn> set of cryptographic hash functions defined by the
-NIST in <a href="http://csrc.nist.gov/groups/STM/cavp/documents/shs/sha256-384-512.pdf">“Descriptions of SHA-256, SHA-384, and SHA-512”</a>.</p>
+    <p>The <dfn>SHA-256</dfn>, <dfn>SHA-384</dfn>, and <dfn>SHA-512</dfn> are part
+of the <dfn>SHA-2</dfn> set of cryptographic hash functions defined by the
+NIST in <a href="http://csrc.nist.gov/groups/STM/cavp/documents/shs/sha256-384-512.pdf">&ldquo;Descriptions of SHA-256, SHA-384, and SHA-512&rdquo;</a>.</p>
 
   </section>
 </section>
 
-<section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="framework-1">
-  <!--OddPage--><h2 id="framework" aria-level="1" role="heading"><span class="secno">3. </span>Framework</h2>
+<section>
+  <h2 id="framework">Framework</h2>
 
   <p>The integrity verification mechanism specified here boils down to the
 process of generating a sufficiently strong cryptographic digest for a
 resource, and transmitting that digest to a user agent so that it may be
 used when fetching the resource.</p>
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="integrity-metadata-1">
-    <h3 id="integrity-metadata" aria-level="2" role="heading"><span class="secno">3.1 </span>Integrity metadata</h3>
+  <section>
+    <h3 id="integrity-metadata">Integrity metadata</h3>
 
-    <p>To verify the integrity of a resource, a user agent requires <dfn id="dfn-integrity-metadata">integrity
+    <p>To verify the integrity of a resource, a user agent requires <dfn>integrity
 metadata</dfn>, which consists of the following pieces of information:</p>
 
     <ul>
       <li>cryptographic hash function</li>
       <li><a href="#dfn-digest">digest</a></li>
-      <li>the resource’s MIME type</li>
+      <li>the resource&rsquo;s MIME type</li>
     </ul>
 
-    <p>The hash function and digest <em class="rfc2119" title="MUST">MUST</em> be provided in order to validate a
-resource’s integrity. The MIME type <em class="rfc2119" title="SHOULD">SHOULD</em> be provided, as it mitigates the
+    <p>The hash function and digest MUST be provided in order to validate a
+resource&rsquo;s integrity. The MIME type SHOULD be provided, as it mitigates the
 risk of certain attack vectors (see <a href="#mime-type-confusion">MIME Type confusion</a> in
-this document’s Security Considerations section).</p>
+this document&rsquo;s Security Considerations section).</p>
 
-    <p>This metadata is generally encoded as a “named information” (<code>ni</code>) URI, as defined in RFC6920. [<cite><a class="bibref" href="#bib-RFC6920">RFC6920</a></cite>]</p>
+    <p>This metadata is generally encoded as a &ldquo;named information&rdquo; (<code>ni</code>) URI, as defined in RFC6920. [[!RFC6920]]</p>
 
-    <p>For example, given a resource containing only the string “Hello, world!”,
+    <p>For example, given a resource containing only the string &ldquo;Hello, world!&rdquo;,
 an author might choose <a href="#dfn-sha-2">SHA-256</a> as a hash function.
 <code>-MO_YqmqPm_BYZwlDkir51GTc9Pt9BvmLrXcRRma8u8</code> is the base64url-encoded
 digest that results. This can be encoded as an <code>ni</code> URI as follows:</p>
@@ -738,7 +229,7 @@ digest that results. This can be encoded as an <code>ni</code> URI as follows:</
     <pre><code>ni:///sha-256;-MO_YqmqPm_BYZwlDkir51GTc9Pt9BvmLrXcRRma8u8?ct=text/plain
 </code></pre>
 
-    <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_1"><span>Note</span></div><div class="">
+    <div class="note">
       <p>Digests may be generated using any number of utilities. <a href="http://www.openssl.org/">OpenSSL</a>, for
 example, is quite commonly available. The example in this section is the
 result of the following command line:</p>
@@ -746,25 +237,25 @@ result of the following command line:</p>
       <pre><code>echo -n "Hello, world." | openssl dgst -sha256 -binary | openssl enc -base64 | sed -e 's/+/-/g' -e 's/\//_/g'
 </code></pre>
 
-    </div></div>
+    </div>
 
   </section>
   <!-- /Framework::Required metadata -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="cryptographic-hash-functions-1">
-    <h3 id="cryptographic-hash-functions" aria-level="2" role="heading"><span class="secno">3.2 </span>Cryptographic hash functions</h3>
+  <section>
+    <h3 id="cryptographic-hash-functions">Cryptographic hash functions</h3>
 
-    <p>Conformant user agents <em class="rfc2119" title="MUST">MUST</em> support the <a href="#dfn-sha-2">SHA-256</a> and <a href="#dfn-sha-2">SHA-512</a>
-cryptographic hash functions for use as part of a resource’s
+    <p>Conformant user agents MUST support the <a href="#dfn-sha-2">SHA-256</a> and <a href="#dfn-sha-2">SHA-512</a>
+cryptographic hash functions for use as part of a resource&rsquo;s
 <a href="#dfn-integrity-metadata">integrity metadata</a>.</p>
   </section>
   <!-- /Framework::Cryptographic hash functions -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="resource-verification-algorithms-1">
-    <h3 id="resource-verification-algorithms" aria-level="2" role="heading"><span class="secno">3.3 </span>Resource verification algorithms</h3>
+  <section>
+    <h3 id="resource-verification-algorithms">Resource verification algorithms</h3>
 
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="apply-algorithm-to-resource">
-      <h4 id="apply-varalgorithmvar-to-varresourcevar" aria-level="3" role="heading"><span class="secno">3.3.1 </span>Apply <var>algorithm</var> to <var>resource</var></h4>
+    <section>
+      <h4 id="apply-varalgorithmvar-to-varresourcevar">Apply <var>algorithm</var> to <var>resource</var></h4>
 
       <ol>
         <li>If <var>algorithm</var> is not a hash function recognized and supported
@@ -778,18 +269,28 @@ the binary representation of the <a href="#dfn-entity-body">entity body</a> of <
         <li>Return <var>encodedResult</var>.</li>
       </ol>
 
+      <p class="todo">TODO: It&rsquo;s not clear that &ldquo;binary representation of the entity body &hellip;&rdquo;
+does what we want. I don&rsquo;t think we yet have a good way of saying &ldquo;bits
+on the wire&rdquo;. See <a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky&rsquo;s WG post on this topic</a></p>
+
     </section>
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="does-resource-match-digest">
-      <h4 id="does-varresourcevar-match-vardigestvar" aria-level="3" role="heading"><span class="secno">3.3.2 </span>Does <var>resource</var> match <var>digest</var>?</h4>
+    <section>
+      <h4 id="does-varresourcevar-match-vardigestvar">Does <var>resource</var> match <var>digest</var>?</h4>
 
       <ol>
         <li>If <var>digest</var> is the empty string, return <code>true</code>.</li>
-        <li>If <var>digest</var> is not a valid “named information” (<code>ni</code>) URI,
+        <li>If <var>resource</var>&rsquo;s scheme is <code>about</code>, return <code>true</code>.</li>
+        <li>If <var>digest</var> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URI,
 return <code>false</code>.</li>
         <li>Let <var>algorithm</var> be the <var>alg</var> component of
 <var>digest</var>.</li>
         <li>Let <var>expectedValue</var> be the <var>val</var> component of
 <var>digest</var>.</li>
+        <li>Let <var>expectedType</var> be the value of <var>digest</var>&rsquo;s <code>ct</code>
+query string parameter.</li>
+        <li>If <var>expectedType</var> is not the empty string, and is not a
+case-insensitive match for <var>resource</var>&rsquo;s MIME type,
+return <code>false</code>.</li>
         <li>Let <var>actualValue</var> be the result of <a href="#apply-algorithm-to-resource">applying
 <var>algorithm</var> to <var>resource</var></a>.</li>
         <li>If <var>actualValue</var> is <code>null</code>, return <code>false</code>.</li>
@@ -800,40 +301,41 @@ return <code>false</code>.</li>
     </section>
   </section>
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="verification-of-html-document-subresources-1">
-    <h3 id="verification-of-html-document-subresources" aria-level="2" role="heading"><span class="secno">3.4 </span>Verification of HTML document subresources</h3>
+  <section>
+    <h3 id="verification-of-html-document-subresources">Verification of HTML document subresources</h3>
 
     <p>A variety of HTML elements result in requests for resources that are to be
 embedded into the document, or executed in its context. To support integrity
 metadata for each of these, and new elements that are added in the future,
-a new <code>digest</code> attribute is added to HTML5’s list of
-<a href="http://www.w3.org/TR/html5/dom.html#global-attributes">global attributes</a> that <em class="rfc2119" title="MAY">MAY</em> be specified on any HTML element, and
+a new <code>digest</code> attribute is added to HTML5&rsquo;s list of
+<a href="http://www.w3.org/TR/html5/dom.html#global-attributes">global attributes</a> that MAY be specified on any HTML element, and
 a corresponding attribute is added to the <a href="http://www.w3.org/TR/html5/dom.html#htmlelement"><code>HTMLElement</code>
 interface</a>.</p>
 
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="the-digest-attribute-1">
-      <h4 id="the-digest-attribute" aria-level="3" role="heading"><span class="secno">3.4.1 </span>The <code>digest</code> attribute</h4>
+    <section>
+      <h4 id="the-digest-attribute">The <code>digest</code> attribute</h4>
 
       <p>The <code>digest</code> attribute represents integrity metadata for an element. The
-value of the attribute <em class="rfc2119" title="MUST">MUST</em> be either the empty string, or a valid “named
-information” (<code>ni</code>) URI. [<cite><a class="bibref" href="#bib-RFC6920">RFC6920</a></cite>]</p>
+value of the attribute MUST be either the empty string, or a valid &ldquo;named
+information&rdquo; (<code>ni</code>) URI. [[!RFC6920]]</p>
 
       <p>The <code>digest</code> IDL attribute must <a href="http://www.w3.org/TR/html5/infrastructure.html#reflect">reflect</a> the <code>digest</code> content attribute.</p>
 
     </section>
     <!-- /Framework::HTML::digest -->
 
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="htmlelement-extension-1">
-      <h4 id="htmlelement-extension" aria-level="3" role="heading"><span class="secno">3.4.2 </span>HTMLElement extension</h4>
+    <section>
+      <h4 id="htmlelement-extension">HTMLElement extension</h4>
 
-      <pre class="idl"><span class="idlInterface" id="idl-def-HTMLElement">partial interface <span class="idlInterfaceID">HTMLElement</span> {
-<span class="idlAttribute">                attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-HTMLElement-digest">digest</a></span>;</span>
-};</span></pre><section id="attributes"><h5 aria-level="4" role="heading" id="h5_attributes"><span class="secno">3.4.2.1 </span>Attributes</h5><dl class="attributes"><dt id="widl-HTMLElement-digest"><code>digest</code> of type <span class="idlAttrType">DOMString</span>,            </dt><dd>The value of this element’s <code>digest</code> attribute</dd></dl></section>
+      <dl title="partial interface HTMLElement" class="idl">
+        <dt>attribute DOMString digest</dt>
+        <dd>The value of this element&rsquo;s <code>digest</code> attribute</dd>
+      </dl>
     </section>
     <!-- /Framework::HTML::HTMLElement -->
 
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="handling-integrity-violations-1">
-      <h4 id="handling-integrity-violations" aria-level="3" role="heading"><span class="secno">3.4.3 </span>Handling integrity violations</h4>
+    <section>
+      <h4 id="handling-integrity-violations">Handling integrity violations</h4>
 
       <p>Documents may specify the behavior of a failed integrity check by delivering
 a <a href="http://w3.org/TR/CSP11">Content Security Policy</a> which contains an <code>integrity-policy</code>
@@ -843,35 +345,78 @@ directive, defined by the following ABNF grammar:</p>
 directive-value: "block" / "report" / "fallback"
 </code></pre>
 
-      <p>A documents’s <dfn id="dfn-integrity-policy">integrity policy</dfn> is the value of the
+      <p>A documents&rsquo;s <dfn>integrity policy</dfn> is the value of the
 <code>integrity-policy</code> directive, if explicitly provided as part of the
-document’s Content Security Policy, or <code>block</code> otherwise.</p>
+document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
 
-      <p>If the document’s integrity policy is <code>block</code>, the user agent <em class="rfc2119" title="MUST">MUST</em> refuse to
+      <p>If the document&rsquo;s integrity policy is <code>block</code>, the user agent MUST refuse to
 render or execute resources that fail an integrity check, <em>and</em> must 
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p>If the document’s integrity policy is <code>report</code>, the user agent <em class="rfc2119" title="MAY">MAY</em> refuse to
-render or execute resources that fail an integrity check, <em>and</em> <em class="rfc2119" title="MUST">MUST</em> 
+      <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY refuse to
+render or execute resources that fail an integrity check, <em>and</em> MUST 
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p class="todo">If the document’s integrity policy is <code>fallback</code>, the user agent <em class="rfc2119" title="MUST">MUST</em>
-<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>, and <em class="rfc2119" title="MAY">MAY</em> load a fallback resource via a TODO
-mechansism that isn’t specified yet.</p>
+      <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST
+<a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>, and MAY load a fallback resource via a TODO
+mechansism that isn&rsquo;t specified yet.</p>
 
     </section>
 
-    <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="elements-1">
-      <h4 id="elements" aria-level="3" role="heading"><span class="secno">3.4.4 </span>Elements</h4>
+    <section>
+      <h5 id="elements">Elements</h5>
 
-      <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="the-script-element-1">
-        <h5 id="the-script-element" aria-level="4" role="heading"><span class="secno">3.4.4.1 </span>The <code>script</code> element</h5>
+      <section>
+        <h6 id="the-iframe-element">The <code>iframe</code> element</h6>
 
-        <p>Insert the following steps after step 5 of step 14 of HTML5’s
-<a href="http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script">“prepare a script” algorithm</a>:</p>
+        <p>When content is to be loaded into the <a href="http://www.w3.org/TR/html5/browsers.html#child-browsing-context">child browsing context</a> created
+by an <code>iframe</code> element that has a non-empty <code>digest</code> attribute:</p>
+
+        <ul>
+          <li>The user agent MUST delay rendering the content until the
+<a href="http://www.w3.org/TR/html5/infrastructure.html#fetch">fetching algorithm</a>&rsquo;s task to <a href="http://fetch.spec.whatwg.org/#process-request-end-of-file">process request end-of-file</a>
+completes.</li>
+          <li>When the <a href="http://fetch.spec.whatwg.org/#process-request-end-of-file">process request end-of-file</a> task completes:
+            <ol>
+              <li>Let <var>digest</var> be the value of the document&rsquo;s browsing context
+owner <code>iframe</code> element&rsquo;s <code>digest</code> attribute.</li>
+              <li>Let <var>resource</var> be the response returned from the fetching
+algorithm.</li>
+              <li>If <a href="#does-resource-match-digest"><var>resource</var> does not match <var>digest</var></a>:
+                <ol>
+                  <li>If <var>resource</var> is same-origin with the document&rsquo;s browsing
+context owner <code>iframe</code> element&rsquo;s Document, then <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a>
+to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code> at the <code>iframe</code> element
+(this will not fire for cross-origin requests, to avoid leaking
+data about those resource&rsquo;s content).</li>
+                  <li><a href="http://www.w3.org/TR/html5/browsers.html#navigate">Navigate</a> the child browsing context to <code>about:blank</code>.</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ul>
+
+        <p class="todo">How does this effect things like the preload scanner? How much work is it
+going to be for vendors to change the &ldquo;display whatever we&rsquo;ve got, ASAP!&rdquo;
+behavior that makes things fast for users? How much impact will there be
+on user experience, especially for things like ads, where this kind of
+validation has the most value?</p>
+
+        <p class="todo">How do we deal with navigations in the child browsing context? Are they
+simply disallowed? If so, does that make sense? It might for ads, but
+what about other use-cases?</p>
+
+      </section>
+      <!-- /Framework::HTML::iframe -->
+
+      <section>
+        <h6 id="the-script-element">The <code>script</code> element</h6>
+
+        <p>Insert the following steps after step 5 of step 14 of HTML5&rsquo;s
+<a href="http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script">&ldquo;prepare a script&rdquo; algorithm</a>:</p>
 
         <ol start="6">
-          <li>Let <var>digest</var> be the value of the element’s <code>digest</code> attribute.</li>
+          <li>Let <var>digest</var> be the value of the element&rsquo;s <code>digest</code> attribute.</li>
           <li>If <var>digest</var> is the empty string, skip the remaining steps.</li>
           <li>Once the <a href="http://www.w3.org/TR/html5/infrastructure.html#fetch">fetching algorithm</a> has completed:
             <ol>
@@ -879,34 +424,29 @@ mechansism that isn’t specified yet.</p>
 algorithm.</li>
               <li>If <a href="#does-resource-match-digest"><var>resource</var> does not match <var>digest</var></a>:
                 <ol>
-                  <li>If the document’s <a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
+                  <li>If the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
 task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code>
 at the element, and abort these steps.</li>
-                  <li>If the document’s <a href="#dfn-integrity-policy">integrity policy</a> is <code>fallback</code>…</li>
+                  <li>If the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>fallback</code>&hellip;</li>
                 </ol>
               </li>
             </ol>
           </li>
         </ol>
 
-        <p class="todo">TODO: It’s not clear that “binary representation of the entity body …”
-does what we want. I don’t think we yet have a good way of saying “bits
-on the wire”. See <a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky’s WG post on this topic</a></p>
-
       </section>
       <!-- /Framework::HTML::Elements::script -->
 
-      <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="the-every-other-element-1">
-        <h5 id="the-every-other-element" aria-level="4" role="heading"><span class="secno">3.4.4.2 </span>The <code>every-other</code> element</h5>
+      <section>
+        <h6 id="the-every-other-element">The <code>every-other</code> element</h6>
 
         <div class="todo">
-          <p>TODO: <code>script</code> is a good start, but at a minimum, we’ll need to cover the
+          <p>TODO: <code>script</code> is a good start, but at a minimum, we&rsquo;ll need to cover the
 following set of elements:</p>
 
           <ul>
             <li>audio</li>
             <li>embed</li>
-            <li>iframe</li>
             <li>img</li>
             <li>link</li>
             <li>object</li>
@@ -923,11 +463,11 @@ following set of elements:</p>
   </section>
   <!-- /Framework::HTML -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="verification-of-css-loaded-subresources-1">
-    <h3 id="verification-of-css-loaded-subresources" aria-level="2" role="heading"><span class="secno">3.5 </span>Verification of CSS-loaded subresources</h3>
+  <section>
+    <h3 id="verification-of-css-loaded-subresources">Verification of CSS-loaded subresources</h3>
 
-    <div class="note"><div class="note-title" aria-level="3" role="heading" id="h_note_2"><span>Note</span></div><div class="">
-      <p>Two strawmen. We should poke someone like Tab about these; he’ll have
+    <div class="note">
+      <p>Two strawmen. We should poke someone like Tab about these; he&rsquo;ll have
 ideas. Or at least opinions.</p>
 
       <p>Idea #1: add an <code>@integrity</code> block at the beginning of a CSS file that
@@ -962,25 +502,25 @@ one-offs if we think those are more likely). Something like:</p>
 </code></pre>
 
       <p>Hope someone else has better ideas.</p>
-    </div></div>
+    </div>
 
   </section>
   <!-- /Framework::CSS -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="verification-of-js-loaded-subresources-1">
-    <h3 id="verification-of-js-loaded-subresources" aria-level="2" role="heading"><span class="secno">3.6 </span>Verification of JS-loaded subresources</h3>
+  <section>
+    <h3 id="verification-of-js-loaded-subresources">Verification of JS-loaded subresources</h3>
 
-    <section class="todo" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="workers-1">
-      <h4 id="workers" aria-level="3" role="heading"><span class="secno">3.6.1 </span>Workers</h4>
+    <section class="todo">
+      <h4 id="workers">Workers</h4>
 
-      <p>We’ll need to somehow deal with <code>Worker</code> and <code>SharedWorker</code> fetches (and
+      <p>We&rsquo;ll need to somehow deal with <code>Worker</code> and <code>SharedWorker</code> fetches (and
 potentially <code>importScripts</code> inside workers as well).</p>
 
     </section>
     <!-- /Framework::JS::Workers -->
 
-    <section class="todo" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="xmlhttprequest-1">
-      <h4 id="xmlhttprequest" aria-level="3" role="heading"><span class="secno">3.6.2 </span>XMLHttpRequest</h4>
+    <section class="todo">
+      <h4 id="xmlhttprequest">XMLHttpRequest</h4>
 
       <p>Not sure how relevant this is, but maybe I know the hash of some resource
 I want to load over XHR?</p>
@@ -993,14 +533,14 @@ I want to load over XHR?</p>
 </section>
 <!-- /Framework -->
 
-<section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="implementation-considerations-1">
-  <!--OddPage--><h2 id="implementation-considerations" aria-level="1" role="heading"><span class="secno">4. </span>Implementation Considerations</h2>
+<section>
+  <h2 id="implementation-considerations">Implementation Considerations</h2>
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="proxies-1">
-    <h3 id="proxies" aria-level="2" role="heading"><span class="secno">4.1 </span>Proxies</h3>
+  <section>
+    <h3 id="proxies">Proxies</h3>
 
     <p>Optimizing proxies and other intermediate servers which modify the
-content of fetched resources <em class="rfc2119" title="MUST">MUST</em> ensure that the digest associated
+content of fetched resources MUST ensure that the digest associated
 with those resources stays in sync with the new content. One option
 would be simply to refuse to optimize resources for which a page author
 has requested integrity verification. Another option might be to modify
@@ -1011,36 +551,36 @@ the page as well as the resources to keep the digests up to date.</p>
 </section>
 <!-- /Implementation -->
 
-<section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="security-considerations-1">
-  <!--OddPage--><h2 id="security-considerations" aria-level="1" role="heading"><span class="secno">5. </span>Security Considerations</h2>
+<section>
+  <h2 id="security-considerations">Security Considerations</h2>
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="insecure-channels-remain-insecure-1">
-    <h3 id="insecure-channels-remain-insecure" aria-level="2" role="heading"><span class="secno">5.1 </span>Insecure channels remain insecure</h3>
+  <section>
+    <h3 id="insecure-channels-remain-insecure">Insecure channels remain insecure</h3>
 
     <p>A digest delivered over an insecure channel provides no security benefit.
 Attackers can alter the digest in-flight (or remove it entirely (or do
 absolutely anything else to the document)), just as they could alter the
 resource the hash is meant to validate. Authors who desire any sort of
-security whatsoever <em class="rfc2119" title="SHOULD">SHOULD</em> deliver resources containing digests over
+security whatsoever SHOULD deliver resources containing digests over
 secure channels.</p>
   </section>
   <!-- /Security::Insecure channels -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="hash-collision-attacks-1">
-    <h3 id="hash-collision-attacks" aria-level="2" role="heading"><span class="secno">5.2 </span>Hash collision attacks</h3>
+  <section>
+    <h3 id="hash-collision-attacks">Hash collision attacks</h3>
 
     <p>Digests are only as strong as the hash function used to generate them. User
-agents <em class="rfc2119" title="SHOULD">SHOULD</em> refuse to support known-weak hashing functions like MD5, and
-<em class="rfc2119" title="SHOULD">SHOULD</em> restrict supported hashing functions to those known to be
+agents SHOULD refuse to support known-weak hashing functions like MD5, and
+SHOULD restrict supported hashing functions to those known to be
 collision-resistant. At the time of writing, SHA-256 is a good baseline.
-Moreover, user agents <em class="rfc2119" title="SHOULD">SHOULD</em> reevaluate their supported hashing functions
+Moreover, user agents SHOULD reevaluate their supported hashing functions
 on a regular basis, and deprecate support for those functions shown to be
 insecure.</p>
   </section>
   <!-- /Security::Hash collision -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="origin-confusion-1">
-    <h3 id="origin-confusion" aria-level="2" role="heading"><span class="secno">5.3 </span>Origin confusion</h3>
+  <section>
+    <h3 id="origin-confusion">Origin confusion</h3>
 
     <p>User agents which set up a caching mechanism that uses only the digest to
 identify a resource are vulnerable to attacks which bypass same-origin
@@ -1052,11 +592,11 @@ read data straight from the cache.</p>
     <ul>
       <li>
         <p><a href="http://www.w3.org/TR/html5/webappapis.html#runtime-script-errors">Runtime script errors</a> are sanitized for resources that are
-<a href="http://www.w3.org/TR/html5/infrastructure.html#cors-cross-origin">CORS-cross-origin</a> to the page into which they are loaded. [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>]</p>
+<a href="http://www.w3.org/TR/html5/infrastructure.html#cors-cross-origin">CORS-cross-origin</a> to the page into which they are loaded. [[!HTML5]]</p>
       </li>
       <li>
         <p>XMLHttpRequest may only load data from same-origin resources, or from
-resources delivered with proper CORS headers. [<cite><a class="bibref" href="#bib-XMLHTTPREQUEST">XMLHTTPREQUEST</a></cite>]</p>
+resources delivered with proper CORS headers. [[!XMLHTTPREQUEST]]</p>
       </li>
     </ul>
 
@@ -1065,19 +605,19 @@ resources delivered with proper CORS headers. [<cite><a class="bibref" href="#bi
   </section>
   <!-- /Security::Origin confusion -->
 
-  <section typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter" id="mime-type-confusion-1">
-    <h3 id="mime-type-confusion" aria-level="2" role="heading"><span class="secno">5.4 </span>MIME type confusion</h3>
+  <section>
+    <h3 id="mime-type-confusion">MIME type confusion</h3>
 
     <p>User agents which set up a caching mechanism that uses only the digest to
 identify a resource are vulnerable to attacks which create resources that
 behave differently based on the context in which they are loaded. <a href="http://en.wikipedia.org/wiki/Gifar">Gifar</a>
 is the canonical example of such an attack.</p>
 
-    <p>Authors <em class="rfc2119" title="SHOULD">SHOULD</em> mitigate this risk by specifing the expected content type
+    <p>Authors SHOULD mitigate this risk by specifing the expected content type
 along with the digest, as specified in <a href="http://tools.ietf.org/html/rfc6920#section-3.1">RFC 6920, section 3.1</a>,
 and verifying that the content type of the resource matches the expectations
 of the context into which it is loaded. For instance, a resource of type
-<code>text/plain</code> loaded via a <code>script</code> element <em class="rfc2119" title="MUST">MUST</em> not execute.</p>
+<code>text/plain</code> loaded via a <code>script</code> element MUST not execute.</p>
 
   </section>
   <!-- /Security::MIME Type confusion -->
@@ -1085,16 +625,5 @@ of the context into which it is loaded. For instance, a resource of type
 </section>
 <!-- /Security -->
 
-
-
-<section id="references" class="appendix" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter"><!--OddPage--><h2 aria-level="1" role="heading" id="h2_references"><span class="secno">A. </span>References</h2><section id="normative-references" typeof="bibo:Chapter" resource="#ref" rel="bibo:Chapter"><h3 aria-level="2" role="heading" id="h3_normative-references"><span class="secno">A.1 </span>Normative references</h3><dl class="bibliography" about=""><dt id="bib-ABNF">[ABNF]</dt><dd rel="dcterms:requires">D. Crocker; P. Overell. <a href="http://www.ietf.org/rfc/rfc5234.txt"><cite>Augmented BNF for Syntax Specifications: ABNF</cite></a>. January 2008. STD. URL: <a href="http://www.ietf.org/rfc/rfc5234.txt">http://www.ietf.org/rfc/rfc5234.txt</a>
-</dd><dt id="bib-HTML5">[HTML5]</dt><dd rel="dcterms:requires">Robin Berjon; Steve Faulkner; Travis Leithead; Erika Doyle Navara; Edward O'Connor; Silvia Pfeiffer. <a href="http://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 6 August 2013. W3C Candidate Recommendation. URL: <a href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
-</dd><dt id="bib-HTTP11">[HTTP11]</dt><dd rel="dcterms:requires">R. Fielding et al. <a href="http://www.ietf.org/rfc/rfc2616.txt"><cite>Hypertext Transfer Protocol - HTTP/1.1</cite></a>. June 1999. RFC. URL: <a href="http://www.ietf.org/rfc/rfc2616.txt">http://www.ietf.org/rfc/rfc2616.txt</a>
-</dd><dt id="bib-MIMETYPE">[MIMETYPE]</dt><dd rel="dcterms:requires">Ned Freed; Nathaniel S. Borenstein. <a href="http://tools.ietf.org/html/rfc2046"><cite>Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types</cite></a>. Draft Standard. URL: <a href="http://tools.ietf.org/html/rfc2046">http://tools.ietf.org/html/rfc2046</a>
-</dd><dt id="bib-RFC2119">[RFC2119]</dt><dd rel="dcterms:requires">S. Bradner. <a href="http://www.ietf.org/rfc/rfc2119.txt"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a> 
-</dd><dt id="bib-RFC2818">[RFC2818]</dt><dd rel="dcterms:requires">E. Rescorla. <a href="http://www.ietf.org/rfc/rfc2818.txt"><cite>HTTP Over TLS</cite></a>. May 2000. RFC. URL: <a href="http://www.ietf.org/rfc/rfc2818.txt">http://www.ietf.org/rfc/rfc2818.txt</a>
-</dd><dt id="bib-RFC4648">[RFC4648]</dt><dd rel="dcterms:requires">Simon Josefsson. <a href="http://tools.ietf.org/html/rfc4648"><cite>The Base16, Base32, and Base64 Data Encodings</cite></a>. Proposed Standard. URL: <a href="http://tools.ietf.org/html/rfc4648">http://tools.ietf.org/html/rfc4648</a>
-</dd><dt id="bib-RFC6454">[RFC6454]</dt><dd rel="dcterms:requires">A. Barth. <a href="http://www.ietf.org/rfc/rfc6454.txt"><cite>The Web Origin Concept</cite></a>. December 2011. RFC. URL: <a href="http://www.ietf.org/rfc/rfc6454.txt">http://www.ietf.org/rfc/rfc6454.txt</a>
-</dd><dt id="bib-RFC6920">[RFC6920]</dt><dd rel="dcterms:requires">Stephen Farrell; Dirk Kutscher; Christian Dannewitz; Borje Ohlman; Ari Keranen; Phillip Hallam-Baker. <a href="http://tools.ietf.org/html/rfc6920"><cite>Naming Things with Hashes</cite></a>. Proposed Standard. URL: <a href="http://tools.ietf.org/html/rfc6920">http://tools.ietf.org/html/rfc6920</a>
-</dd><dt id="bib-XMLHTTPREQUEST">[XMLHTTPREQUEST]</dt><dd rel="dcterms:requires">Julian Aubourg; Jungkee Song; Hallvord Steen et al. <a href="http://www.w3.org/TR/XMLHttpRequest/"><cite>XMLHttpRequest</cite></a>. 6 December 2012. W3C Working Draft. URL: <a href="http://www.w3.org/TR/XMLHttpRequest/">http://www.w3.org/TR/XMLHttpRequest/</a>
-</dd></dl></section></section></body></html>
+</body>
+</html>

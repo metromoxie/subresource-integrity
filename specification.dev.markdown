@@ -186,8 +186,7 @@ on the wire". See [bzbarsky's WG post on this topic][bz]
 #### Does <var>resource</var> match <var>digest</var>?
 
 1.  If <var>digest</var> is the empty string, return `true`.
-2.  If <var>resource</var>'s scheme is `about` and scheme data is `blank`,
-    return `true`.
+2.  If <var>resource</var>'s scheme is `about`, return `true`.
 3.  If <var>digest</var> is not a valid "named information" (`ni`) URI,
     return `false`.
 4.  Let <var>algorithm</var> be the <var>alg</var> component of

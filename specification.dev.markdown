@@ -314,11 +314,11 @@ A documents's <dfn>integrity policy</dfn> is the value of the
 document's Content Security Policy, or `block` otherwise.
 
 If the document's integrity policy is `block`, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST 
+render or execute resources that fail an integrity check, <em>and</em> MUST
 [report a violation][].
 
 If the document's integrity policy is `report`, the user agent MAY refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST 
+render or execute resources that fail an integrity check, <em>and</em> MUST
 [report a violation][].
 
 If the document's integrity policy is `fallback`, the user agent MUST refuse
@@ -358,7 +358,6 @@ by an `iframe` element that has a non-empty `digest` attribute:
            (this will not fire for cross-origin requests, to avoid leaking
            data about those resource's content).
         2. [Navigate][] the child browsing context to `about:blank`.
-  
 
 How does this effect things like the preload scanner? How much work is it
 going to be for vendors to change the "display whatever we've got, ASAP!"
@@ -450,7 +449,7 @@ one-offs if we think those are more likely). Something like:
         background-image: url(http://example.com/cat.gif)
                           digest(ni:///sha-256;3587cb776ce0e4...c838c423);
     }
-    
+
 or
 
     @font-face {
@@ -458,7 +457,7 @@ or
         src: url(font.woff)
              digest(ni:///sha-256;3587cb776ce0e4...c838c423);
     }
-    
+
 Hope someone else has better ideas.
 </div>
 
@@ -490,7 +489,7 @@ I want to load over XHR?
 ## Implementation Considerations
 
 <section>
-### Proxies 
+### Proxies
 
 Optimizing proxies and other intermediate servers which modify the
 content of fetched resources MUST ensure that the digest associated

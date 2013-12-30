@@ -349,6 +349,17 @@ providing a user with a way to save the resource for later use:
     violation][], <em>and</em> MUST abort the download if the document's
     [integrity policy][] is `block`.
 
+<div class="note">
+Note that this should cover both downloads triggered by HTTP headers like
+`Content-Disposition`, and also downloads triggered by a `download` attribute
+on the `a` element. It might look like the following:
+
+    <a href="https://example.com/file.zip"
+       integrity="ni:///sha256;skjdsfkafinqfb...ihja_gqg"
+       download>Download!</a>
+</div>
+
+
 [as a download]: http://www.w3.org/TR/html5/links.html#as-a-download
 </section><!-- /Framework::HTML::a -->
 
@@ -637,8 +648,8 @@ insecure.
 <section>
 ## Acknowledgements
 
-The [<a download>][a] section is inspired heavily by the [Link Fingerprints][]
-concept 
+The [`a` element][a] section is inspired heavily by Gervase Markham's
+[Link Fingerprints][] concept.
 
 [a]: #the-a-element
 [Link Fingerprints]: http://www.gerv.net/security/link-fingerprints/

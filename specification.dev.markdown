@@ -273,7 +273,7 @@ fall back to the `src` attribute's URL. That is:
 
     <script src="http://example.com/script.js"
             noncanonical-src="http://cdn.example.com/script.js"
-            integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq">
+            integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"></script>
 
 The noncanonical resource would be fetched with its [omit credentials
 mode][] set to `always`, to prevent leakage of cookies across insecure

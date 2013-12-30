@@ -374,7 +374,7 @@ fall back to the <code>src</code> attribute&rsquo;s URL. That is:</p>
 
         <pre><code>&lt;script src="http://example.com/script.js"
         noncanonical-src="http://cdn.example.com/script.js"
-        integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;
+        integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;&lt;/script&gt;
 </code></pre>
 
         <p>The noncanonical resource would be fetched with its <a href="http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode">omit credentials
@@ -435,6 +435,34 @@ violation</a>.</p>
 
     <section>
       <h5 id="elements">Elements</h5>
+
+      <section>
+        <h6 id="the-a-element">The <code>a</code> element</h6>
+
+        <p>If an <code>a</code> element has a non-empty <code>integrity</code> attribute, then, when handling the
+resource the link points to <a href="http://www.w3.org/TR/html5/links.html#as-a-download">as a download</a>, perform the following step before
+providing a user with a way to save the resource for later use:</p>
+
+        <ul>
+          <li>If the resource <a href="#does-resource-match-metadata">does not match</a> the integrity metadata specified in
+the <code>a</code> element&rsquo;s <code>integrity</code> attribute, the user agent MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a
+violation</a>, <em>and</em> MUST abort the download if the document&rsquo;s
+<a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>.</li>
+        </ul>
+
+        <div class="note">
+          <p>Note that this should cover both downloads triggered by HTTP headers like
+<code>Content-Disposition</code>, and also downloads triggered by a <code>download</code> attribute
+on the <code>a</code> element. It might look like the following:</p>
+
+          <pre><code>&lt;a href="https://example.com/file.zip"
+   integrity="ni:///sha256;skjdsfkafinqfb...ihja_gqg"
+   download&gt;Download!&lt;/a&gt;
+</code></pre>
+        </div>
+
+      </section>
+      <!-- /Framework::HTML::a -->
 
       <section>
         <h6 id="the-iframe-element">The <code>iframe</code> element</h6>
@@ -745,6 +773,14 @@ insecure.</p>
 
 </section>
 <!-- /Security -->
+
+<section>
+  <h2 id="acknowledgements">Acknowledgements</h2>
+
+  <p>The <a href="#the-a-element"><code>a</code> element</a> section is inspired heavily by Gervase Markham&rsquo;s
+<a href="http://www.gerv.net/security/link-fingerprints/">Link Fingerprints</a> concept.</p>
+
+</section>
 
 </body>
 </html>

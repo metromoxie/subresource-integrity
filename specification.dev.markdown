@@ -338,6 +338,21 @@ violation][report a violation].
 ##### Elements
 
 <section>
+###### The `a` element
+
+If an `a` element has a non-empty `integrity` attribute, then, when handling the
+resource the link points to [as a download][], perform the following step before
+providing a user with a way to save the resource for later use:
+
+*   If the resource [does not match][match] the integrity metadata specified in
+    the `a` element's `integrity` attribute, the user agent MUST [report a
+    violation][], <em>and</em> MUST abort the download if the document's
+    [integrity policy][] is `block`.
+
+[as a download]: http://www.w3.org/TR/html5/links.html#as-a-download
+</section><!-- /Framework::HTML::a -->
+
+<section>
 ###### The `iframe` element
 
 When content is to be loaded into the [child browsing context][] created
@@ -618,3 +633,13 @@ insecure.
 </section><!-- /Security::Hash collision -->
 
 </section><!-- /Security -->
+
+<section>
+## Acknowledgements
+
+The [<a download>][a] section is inspired heavily by the [Link Fingerprints][]
+concept 
+
+[a]: #the-a-element
+[Link Fingerprints]: http://www.gerv.net/security/link-fingerprints/
+</section>

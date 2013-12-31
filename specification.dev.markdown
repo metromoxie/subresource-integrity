@@ -264,6 +264,7 @@ The `integrity` IDL attribute must [reflect][] the `integrity` content attribute
 
 <section>
 #### The `noncanonical-src` attribute
+[noncanonical]: #the-noncanonical-src-attribute
 
 <div class="todo">
 The idea is that conformant browsers would first try to load resources from
@@ -326,14 +327,13 @@ MUST [report a violation][]. The user agent MAY additionally choose to load
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
 execute the resource, <em>and</em> MUST [report a(nother)
-violation][report a violation]. (See [the `noncanonical-src` attribute][]
-for a strawman of how that might look).
+violation][report a violation]. (See [the `noncanonical-src`
+attribute][noncanonical] for a strawman of how that might look).
 {:.todo}
 
 [csp]: http://w3.org/TR/CSP11
 [report a violation]: http://www.w3.org/TR/CSP11/#dfn-report-a-violation
 [integrity policy]: #dfn-integrity-policy
-[the noncanonical-src attribute]: #the-noncanonical-src-attribute
 </section>
 
 <section>
@@ -503,13 +503,63 @@ potentially `importScripts` inside workers as well).
 
 </section><!-- /Framework::JS::Workers -->
 
-<section class="todo">
+<section>
 #### XMLHttpRequest
 
-Not sure how relevant this is, but maybe I know the hash of some resource
-I want to load over XHR?
+To validate the integrity of resources loaded via `XMLHttpRequest`, a new
+`integrity` attribute is added to the `XMLHttpRequest` object. If set, the
+[integrity metadata][] in this attribute is used to validate the resource
+before triggering the `load` event. [[!XMLHTTPREQUEST]]
+
+<section>
+##### The `integrity` attribute
+
+The `integrity` attribute must return its value. Initially its value MUST
+be the empty string.
+
+Setting the `integrity` attribute MUST run these steps:
+
+1. If the state is not `UNSENT` or `OPENED`, throw an `InvalidStateError`
+   exception and abort these steps.
+2. If the value provided is not a valid "named information" (`ni`) URL,
+   throw a "SyntaxError` exception and abort these steps.
+3. Set the `integrity` attribute's value to the value provided.
+
+</section><!-- /Framework::JS::XHR::integrity -->
+
+<section>
+##### Validation
+
+Whenever the user agent would [switch an `XMLHttpRequest` object to the
+`DONE` state][switch-done], then perform the following steps before
+switching state:
+
+1.  If the `integrity` attribute is the empty string, or if the
+    [response entity body][] [matches the value of the `integrity`
+    attribute][match], then abort these steps, and continue to
+    [switch to the `DONE` state][switch-done].
+2.  Otherwise, [report a violation][], and run the following steps
+    if the document's [integrity policy][] is `block`:
+    1. Set the [response entity body][] to `null`
+    2. Run the [request error][] steps for exception
+       [`NetworkError`][xhrnetworkerror] and event [`error`][xhrerror].
+    3. Do not continue to [switch to the `DONE` state][switch-done].
+
+This validation only takes place when the entire resource body has been
+downloaded. For that reason, developers who care about integrity validation
+SHOULD ignore progress events fired while the resource is downloading, and
+instead listen only for the `load` and `error` events. Data processed
+before the `load` event fires is unvalidated, and potentially corrupt.
+
+[switch-done]: https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#switch-done
+[response entity body]: https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#response-entity-body
+[request error]: http://www.w3.org/TR/XMLHttpRequest/#request-error
+[xhrnetworkerror]: http://dev.w3.org/2006/webapi/DOM4Core/#networkerror
+[xhrerror]: http://www.w3.org/TR/XMLHttpRequest/#event-xhr-error
+</section><!-- Framework::JS::XHR::validation -->
 
 </section><!-- /Framework::JS::XHR -->
+
 
 </section><!-- /Framework::JS -->
 </section><!-- /Framework -->

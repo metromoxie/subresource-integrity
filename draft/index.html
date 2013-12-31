@@ -419,8 +419,8 @@ document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
 render or execute resources that fail an integrity check, <em>and</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST
+      <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY render or
+execute resources that fail an integrity check, <em>but</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
       <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST refuse
@@ -429,7 +429,8 @@ MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a viola
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
 execute the resource, <em>and</em> MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a(nother)
-violation</a>.</p>
+violation</a>. (See <a href="#the-noncanonical-src-attribute">the <code>noncanonical-src</code>
+attribute</a> for a strawman of how that might look).</p>
 
     </section>
 
@@ -618,11 +619,64 @@ potentially <code>importScripts</code> inside workers as well).</p>
     </section>
     <!-- /Framework::JS::Workers -->
 
-    <section class="todo">
+    <section>
       <h4 id="xmlhttprequest">XMLHttpRequest</h4>
 
-      <p>Not sure how relevant this is, but maybe I know the hash of some resource
-I want to load over XHR?</p>
+      <p>To validate the integrity of resources loaded via <code>XMLHttpRequest</code>, a new
+<code>integrity</code> attribute is added to the <code>XMLHttpRequest</code> object. If set, the
+<a href="#dfn-integrity-metadata">integrity metadata</a> in this attribute is used to validate the resource
+before triggering the <code>load</code> event.</p>
+
+      <section>
+        <h5 id="the-integrity-attribute-1">The <code>integrity</code> attribute</h5>
+
+        <p>The <code>integrity</code> attribute must return its value. Initially its value MUST
+be the empty string.</p>
+
+        <p>Setting the <code>integrity</code> attribute MUST run these steps:</p>
+
+        <ol>
+          <li>If the state is not <code>UNSENT</code> or <code>OPENED</code>, throw an <code>InvalidStateError</code>
+exception and abort these steps.</li>
+          <li>If the value provided is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URL,
+throw a &ldquo;SyntaxError` exception and abort these steps.</li>
+          <li>Set the <code>integrity</code> attribute&rsquo;s value to the value provided.</li>
+        </ol>
+
+      </section>
+      <!-- /Framework::JS::XHR::integrity -->
+
+      <section>
+        <h5 id="validation">Validation</h5>
+
+        <p>Whenever the user agent would <a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#switch-done">switch an <code>XMLHttpRequest</code> object to the
+<code>DONE</code> state</a>, then perform the following steps before
+switching state:</p>
+
+        <ol>
+          <li>If the <code>integrity</code> attribute is the empty string, or if the
+<a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#response-entity-body">response entity body</a> <a href="#does-resource-match-metadata">matches the value of the <code>integrity</code>
+attribute</a>, then abort these steps, and continue to
+<a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#switch-done">switch to the <code>DONE</code> state</a>.</li>
+          <li>Otherwise, <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>, and run the following steps
+if the document&rsquo;s <a href="#dfn-integrity-policy">integrity policy</a> is <code>block</code>:
+            <ol>
+              <li>Set the <a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#response-entity-body">response entity body</a> to <code>null</code></li>
+              <li>Run the <a href="http://www.w3.org/TR/XMLHttpRequest/#request-error">request error</a> steps for exception
+<a href="http://dev.w3.org/2006/webapi/DOM4Core/#networkerror"><code>NetworkError</code></a> and event <a href="http://www.w3.org/TR/XMLHttpRequest/#event-xhr-error"><code>error</code></a>.</li>
+              <li>Do not continue to <a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#switch-done">switch to the <code>DONE</code> state</a>.</li>
+            </ol>
+          </li>
+        </ol>
+
+        <p>This validation only takes place when the entire resource body has been
+downloaded. For that reason, developers who care about integrity validation
+SHOULD ignore progress events fired while the resource is downloading, and
+instead listen only for the <code>load</code> and <code>error</code> events. Data processed
+before the <code>load</code> event fires is unvalidated, and potentially corrupt.</p>
+
+      </section>
+      <!-- Framework::JS::XHR::validation -->
 
     </section>
     <!-- /Framework::JS::XHR -->
@@ -653,7 +707,7 @@ the latter as a cache hit, regardless of the location mismatch.</p>
   <section>
     <h4 id="risks">Risks</h4>
 
-    <p>This approach is good for performance, but potentially bad for security. See
+    <p>This approach is good for performance, but can have security implications. See
 the <a href="#origin-confusion">origin confusion</a> and <a href="#mime-type-confusion">MIME type confusion</a> sections below for some
 details.</p>
 

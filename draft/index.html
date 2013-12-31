@@ -610,11 +610,67 @@ one-offs if we think those are more likely). Something like:</p>
   <section>
     <h3 id="verification-of-js-loaded-subresources">Verification of JS-loaded subresources</h3>
 
-    <section class="todo">
+    <section>
       <h4 id="workers">Workers</h4>
 
-      <p>We&rsquo;ll need to somehow deal with <code>Worker</code> and <code>SharedWorker</code> fetches (and
-potentially <code>importScripts</code> inside workers as well).</p>
+      <p>To validate the integrity of scripts which are to be run as workers, a new
+constructor is added for <code>Worker</code> and <code>SharedWorker</code> which accpets a second
+argument containing integrity metadata. This information is used when
+<a href="http://dev.w3.org/html5/workers/#run-a-worker">running a worker</a> to perform validation, as outlined in the
+following sections: [[!WEBWORKERS]]</p>
+
+      <section>
+        <h4 id="worker-extension">Worker extension</h4>
+
+        <pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-worker" title="dom-Worker">Constructor</a>(DOMString scriptURL, DOMString integrityMetadata)]
+partial interface <dfn id="worker">Worker</dfn> : <span>EventTarget</span> {
+};</pre>
+
+        <p>When the <code>Worker(scriptURL, integrityMetadata)</code> constructor is invoked:</p>
+
+        <ol>
+          <li>If <code>integrityMetadata</code> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URL,
+throw a <code>SyntaxError</code> exception and abort these steps.</li>
+          <li>Execute the <code>Worker(scriptURL)</code> constructor, and set the newly created
+<code>Worker</code> object&rsquo;s <code>integrity</code> attribute to <code>integrityMetadata</code>.</li>
+        </ol>
+      </section>
+      <!-- /Framework::JS::Workers::Worker -->
+      <section>
+        <h4 id="sharedworker-extension">SharedWorker extension</h4>
+
+        <pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-sharedworker" title="dom-SharedWorker">Constructor</a>(DOMString scriptURL, DOMString name, DOMString integrityMetadata)]
+partial interface <dfn id="worker">SharedWorker</dfn> : <span>EventTarget</span> {
+};</pre>
+
+        <p>When the <code>SharedWorker(scriptURL, name, integrityMetadata)</code> constructor is
+invoked:</p>
+
+        <ol>
+          <li>If <code>integrityMetadata</code> is not a valid &ldquo;named information&rdquo; (<code>ni</code>) URL,
+throw a <code>SyntaxError</code> exception and abort these steps.</li>
+          <li>Execute the <code>SharedWorker(scriptURL, name)</code> constructor, and set the
+newly created <code>SharedWorker</code> object&rsquo;s <code>integrity</code> attribute to
+<code>integrityMetadata</code>.</li>
+        </ol>
+      </section>
+      <!-- /Framework::JS::Workers::SharedWorker -->
+
+      <section>
+        <h4 id="validation">Validation</h4>
+
+        <p>Add the following step directly after step 4 of the <a href="http://dev.w3.org/html5/workers/#run-a-worker">run a worker</a>
+algorithm:</p>
+
+        <ol start="5">
+          <li>If the script resource fetched in step 4 <a href="#does-resource-match-metadata">does not match</a> the
+integrity metadata in the worker&rsquo;s <code>integrity</code> attribute, then for
+each <code>Worker</code> or <code>SharedWorker</code> object associated with <var>worker
+global scope</var>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named
+<code>error</code> at that object. Abort these steps.</li>
+        </ol>
+      </section>
+      <!-- /Framework::JS::Workers::validation -->
 
     </section>
     <!-- /Framework::JS::Workers -->
@@ -625,7 +681,7 @@ potentially <code>importScripts</code> inside workers as well).</p>
       <p>To validate the integrity of resources loaded via <code>XMLHttpRequest</code>, a new
 <code>integrity</code> attribute is added to the <code>XMLHttpRequest</code> object. If set, the
 <a href="#dfn-integrity-metadata">integrity metadata</a> in this attribute is used to validate the resource
-before triggering the <code>load</code> event.</p>
+before triggering the <code>load</code> event. [[!XMLHTTPREQUEST]]</p>
 
       <section>
         <h5 id="the-integrity-attribute-1">The <code>integrity</code> attribute</h5>
@@ -647,7 +703,7 @@ throw a &ldquo;SyntaxError` exception and abort these steps.</li>
       <!-- /Framework::JS::XHR::integrity -->
 
       <section>
-        <h5 id="validation">Validation</h5>
+        <h5 id="validation-1">Validation</h5>
 
         <p>Whenever the user agent would <a href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html#switch-done">switch an <code>XMLHttpRequest</code> object to the
 <code>DONE</code> state</a>, then perform the following steps before

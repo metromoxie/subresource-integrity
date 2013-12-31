@@ -326,12 +326,14 @@ MUST [report a violation][]. The user agent MAY additionally choose to load
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
 execute the resource, <em>and</em> MUST [report a(nother)
-violation][report a violation].
+violation][report a violation]. (See [the `noncanonical-src` attribute][]
+for a strawman of how that might look).
 {:.todo}
 
 [csp]: http://w3.org/TR/CSP11
 [report a violation]: http://www.w3.org/TR/CSP11/#dfn-report-a-violation
 [integrity policy]: #dfn-integrity-policy
+[the noncanonical-src attribute]: #the-noncanonical-src-attribute
 </section>
 
 <section>

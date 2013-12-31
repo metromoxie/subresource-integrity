@@ -316,8 +316,8 @@ If the document's integrity policy is `block`, the user agent MUST refuse to
 render or execute resources that fail an integrity check, <em>and</em> MUST
 [report a violation][].
 
-If the document's integrity policy is `report`, the user agent MAY refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST
+If the document's integrity policy is `report`, the user agent MAY render or
+execute resources that fail an integrity check, <em>but</em> MUST
 [report a violation][].
 
 If the document's integrity policy is `fallback`, the user agent MUST refuse

@@ -535,7 +535,7 @@ the latter as a cache hit, regardless of the location mismatch.
 <section>
 #### Risks
 
-This approach is good for performance, but potentially bad for security. See
+This approach is good for performance, but can have security implications. See
 the [origin confusion][] and [MIME type confusion][] sections below for some
 details.
 

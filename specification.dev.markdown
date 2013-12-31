@@ -750,9 +750,9 @@ insecure.
 <section>
 ## Acknowledgements
 
-The [`a` element][a] section is inspired heavily by Gervase Markham's
-[Link Fingerprints][] concept.
+None of this is new. Much of the content here is inspired heavily by Gervase
+Markham's [Link Fingerprints][] concept, as well as WHATWG's [Link Hashes][].
 
-[a]: #the-a-element
 [Link Fingerprints]: http://www.gerv.net/security/link-fingerprints/
+[Link Hashes]: http://wiki.whatwg.org/wiki/Link_Hashes
 </section>

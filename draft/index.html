@@ -883,6 +883,23 @@ insecure.</p>
   </section>
   <!-- /Security::Hash collision -->
 
+  <section>
+    <h3 id="cross-origin-data-leakage">Cross-origin data leakage</h3>
+
+    <p>Attackers can determine whether some cross-origin resource has certain
+content by attempting to load it with a known digest, and watching for
+load failure. If the load fails, the attacker can surmise that the
+resource didn&rsquo;t match the hash, and thereby gain some insight into its
+contents. This might reveal, for example, whether or not a user is
+logged into a particular service.</p>
+
+    <p>User agents SHOULD mitigate the risk by refusing to trigger <code>error</code>
+handlers for cross-origin resources, but some side-channels will likely
+be difficult to avoid (image&rsquo;s <code>naturalHeight</code>/<code>naturalWidth</code> for
+instance).</p>
+  </section>
+  <!-- /Security::cross-origin -->
+
 </section>
 <!-- /Security -->
 

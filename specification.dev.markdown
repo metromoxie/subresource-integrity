@@ -745,6 +745,22 @@ on a regular basis, and deprecate support for those functions shown to be
 insecure.
 </section><!-- /Security::Hash collision -->
 
+<section>
+### Cross-origin data leakage
+
+Attackers can determine whether some cross-origin resource has certain
+content by attempting to load it with a known digest, and watching for
+load failure. If the load fails, the attacker can surmise that the
+resource didn't match the hash, and thereby gain some insight into its
+contents. This might reveal, for example, whether or not a user is
+logged into a particular service.
+
+User agents SHOULD mitigate the risk by refusing to trigger `error`
+handlers for cross-origin resources, but some side-channels will likely
+be difficult to avoid (image's `naturalHeight`/`naturalWidth` for
+instance).
+</section><!-- /Security::cross-origin -->
+
 </section><!-- /Security -->
 
 <section>

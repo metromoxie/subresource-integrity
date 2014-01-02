@@ -380,11 +380,11 @@ by an `iframe` element that has a non-empty `integrity` attribute:
     2.  Let <var>resource</var> be the response returned from the fetching
         algorithm.
     3.  If [<var>resource</var> does not match <var>metadata</var>][match]:
-        1. If <var>resource</var> is same-origin with the document's browsing
-           context owner `iframe` element's Document, then [queue a task][]
-           to [fire a simple event][] named `error` at the `iframe` element
-           (this will not fire for cross-origin requests, to avoid leaking
-           data about those resource's content).
+        1. If <var>resource</var> is [CORS same-origin][] with the document's
+           browsing context owner `iframe` element's Document, then
+           [queue a task][] to [fire a simple event][] named `error` at the
+           `iframe` element (this will not fire for cross-origin requests, to
+           avoid leaking data about those resource's content).
         2. [Navigate][] the child browsing context to `about:blank`.
 
 How does this effect things like the preload scanner? How much work is it
@@ -403,6 +403,29 @@ what about other use-cases?
 [navigate]: http://www.w3.org/TR/html5/browsers.html#navigate
 [process request end-of-file]: http://fetch.spec.whatwg.org/#process-request-end-of-file
 </section><!-- /Framework::HTML::iframe -->
+
+<section>
+###### The `link` element
+
+Whenever a user agent attempts to [obtain a resource][] pointed to by a
+`link` element that has a non-empty `integrity` attribute, perform the
+following steps before firing a `load` event at the element:
+
+1.  Let <var>metadata</var> be the value of the `link` element's
+    `integrity` attribute.
+2.  Let <var>resource</var> be the response returned from the fetching
+    algorithm.
+3.  If [<var>resource</var> does not match <var>metadata</var>][match]:
+    1.  Abort the `load` event, and treat the resource as having failed to
+        load.
+    2.  If <var>resource</var> is [CORS same-origin][] with the `link`
+        element's Document, then [queue a task][] to [fire a simple event][]
+        named `error` at the `link` element (this will not fire for cross-origin
+        requests, to avoid leaking data about those resource's content).
+
+[obtain a resource]: http://www.w3.org/TR/html5/document-metadata.html#concept-link-obtain
+[cors same-origin]: http://www.w3.org/TR/html5/infrastructure.html#cors-same-origin
+</section><!-- /Framework::HTML::link -->
 
 <section>
 ###### The `script` element
@@ -441,7 +464,6 @@ following set of elements:
 * audio
 * embed
 * img
-* link
 * object
 * source
 * video

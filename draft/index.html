@@ -485,11 +485,11 @@ owner <code>iframe</code> element&rsquo;s <code>integrity</code> attribute.</li>
 algorithm.</li>
               <li>If <a href="#does-resource-match-metadata"><var>resource</var> does not match <var>metadata</var></a>:
                 <ol>
-                  <li>If <var>resource</var> is same-origin with the document&rsquo;s browsing
-context owner <code>iframe</code> element&rsquo;s Document, then <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a>
-to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code> at the <code>iframe</code> element
-(this will not fire for cross-origin requests, to avoid leaking
-data about those resource&rsquo;s content).</li>
+                  <li>If <var>resource</var> is <a href="http://www.w3.org/TR/html5/infrastructure.html#cors-same-origin">CORS same-origin</a> with the document&rsquo;s
+browsing context owner <code>iframe</code> element&rsquo;s Document, then
+<a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a> named <code>error</code> at the
+<code>iframe</code> element (this will not fire for cross-origin requests, to
+avoid leaking data about those resource&rsquo;s content).</li>
                   <li><a href="http://www.w3.org/TR/html5/browsers.html#navigate">Navigate</a> the child browsing context to <code>about:blank</code>.</li>
                 </ol>
               </li>
@@ -509,6 +509,33 @@ what about other use-cases?</p>
 
       </section>
       <!-- /Framework::HTML::iframe -->
+
+      <section>
+        <h6 id="the-link-element">The <code>link</code> element</h6>
+
+        <p>Whenever a user agent attempts to <a href="http://www.w3.org/TR/html5/document-metadata.html#concept-link-obtain">obtain a resource</a> pointed to by a
+<code>link</code> element that has a non-empty <code>integrity</code> attribute, perform the
+following steps before firing a <code>load</code> event at the element:</p>
+
+        <ol>
+          <li>Let <var>metadata</var> be the value of the <code>link</code> element&rsquo;s
+<code>integrity</code> attribute.</li>
+          <li>Let <var>resource</var> be the response returned from the fetching
+algorithm.</li>
+          <li>If <a href="#does-resource-match-metadata"><var>resource</var> does not match <var>metadata</var></a>:
+            <ol>
+              <li>Abort the <code>load</code> event, and treat the resource as having failed to
+load.</li>
+              <li>If <var>resource</var> is <a href="http://www.w3.org/TR/html5/infrastructure.html#cors-same-origin">CORS same-origin</a> with the <code>link</code>
+element&rsquo;s Document, then <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a> to <a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple event</a>
+named <code>error</code> at the <code>link</code> element (this will not fire for cross-origin
+requests, to avoid leaking data about those resource&rsquo;s content).</li>
+            </ol>
+          </li>
+        </ol>
+
+      </section>
+      <!-- /Framework::HTML::link -->
 
       <section>
         <h6 id="the-script-element">The <code>script</code> element</h6>
@@ -550,7 +577,6 @@ following set of elements:</p>
             <li>audio</li>
             <li>embed</li>
             <li>img</li>
-            <li>link</li>
             <li>object</li>
             <li>source</li>
             <li>video</li>

@@ -680,9 +680,10 @@ following sections: [[!WEBWORKERS]]</p>
       <section>
         <h4 id="worker-extension">Worker extension</h4>
 
-        <pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-worker" title="dom-Worker">Constructor</a>(DOMString scriptURL, DOMString integrityMetadata)]
-partial interface <dfn id="worker">Worker</dfn> : <span>EventTarget</span> {
-};</pre>
+        <dl title="[Constructor (DOMString scriptURL, DOMString integrityMetadata)] partial interface Worker : EventTarget" class="idl">
+          <dt>attribute DOMString integrity</dt>
+          <dd>The value of the Worker&rsquo;s <code>integrity</code> attribute. Defaults to the empty string.</dd>
+        </dl>
 
         <p>When the <code>Worker(scriptURL, integrityMetadata)</code> constructor is invoked:</p>
 
@@ -697,9 +698,10 @@ throw a <code>SyntaxError</code> exception and abort these steps.</li>
       <section>
         <h4 id="sharedworker-extension">SharedWorker extension</h4>
 
-        <pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-sharedworker" title="dom-SharedWorker">Constructor</a>(DOMString scriptURL, DOMString name, DOMString integrityMetadata)]
-partial interface <dfn id="worker">SharedWorker</dfn> : <span>EventTarget</span> {
-};</pre>
+        <dl title="[Constructor (DOMString scriptURL, DOMString name, DOMString integrityMetadata)] partial interface Worker : EventTarget" class="idl">
+          <dt>attribute DOMString integrity</dt>
+          <dd>The value of the SharedWorker&rsquo;s <code>integrity</code> attribute. Defaults to the empty string.</dd>
+        </dl>
 
         <p>When the <code>SharedWorker(scriptURL, name, integrityMetadata)</code> constructor is
 invoked:</p>

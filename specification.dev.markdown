@@ -553,9 +553,10 @@ following sections: [[!WEBWORKERS]]
 <section>
 #### Worker extension
 
-<pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-worker" title="dom-Worker">Constructor</a>(DOMString scriptURL, DOMString integrityMetadata)]
-partial interface <dfn id="worker">Worker</dfn> : <span>EventTarget</span> {
-};</pre>
+attribute DOMString integrity
+: The value of the Worker's `integrity` attribute. Defaults to the empty string.
+{:title="[Constructor (DOMString scriptURL, DOMString integrityMetadata)] partial interface Worker : EventTarget"}
+{:.idl}
 
 When the `Worker(scriptURL, integrityMetadata)` constructor is invoked:
 
@@ -567,9 +568,10 @@ When the `Worker(scriptURL, integrityMetadata)` constructor is invoked:
 <section>
 #### SharedWorker extension
 
-<pre class="idl">[<a href="http://dev.w3.org/html5/workers/#dom-sharedworker" title="dom-SharedWorker">Constructor</a>(DOMString scriptURL, DOMString name, DOMString integrityMetadata)]
-partial interface <dfn id="worker">SharedWorker</dfn> : <span>EventTarget</span> {
-};</pre>
+attribute DOMString integrity
+: The value of the SharedWorker's `integrity` attribute. Defaults to the empty string.
+{:title="[Constructor (DOMString scriptURL, DOMString name, DOMString integrityMetadata)] partial interface Worker : EventTarget"}
+{:.idl}
 
 When the `SharedWorker(scriptURL, name, integrityMetadata)` constructor is
 invoked:

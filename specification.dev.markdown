@@ -72,6 +72,28 @@ I'm not sure about #3. Get more detail from the WG about the benefits that
 a fallback system would enable. (mkwst)
 {:.todo}
 </section><!-- /Introduction::Goals -->
+
+<section>
+### Use Cases/Examples
+
+*   An author wants to include JavaScript provided by a third-party
+    analytics service on her site. She wants, however, to ensure that only
+    the code she's carefully reviewed is executed. She can do so by generating
+    [integrity metadata][] for the script she's planning on including, and
+    adding it to the `script` element she includes on her page:
+
+        <script src="https://analytics-r-us.com/include.js"
+                integrity="ni:///sha-256;SDfwewFAE...wefjijfE">
+
+*   A software distribution service wants to ensure that files are correctly
+    downloaded. It can do so by adding [integrity metadata][] to the `a`
+    elements which users click on to trigger a download:
+
+        <a href="https://software-is-nice.com/awesome.exe"
+           integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
+           download>
+
+</section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->
 
 <section id="conformance">

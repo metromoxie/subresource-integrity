@@ -179,6 +179,36 @@ integrity is verified.</p>
 a fallback system would enable. (mkwst)</p>
   </section>
   <!-- /Introduction::Goals -->
+
+  <section>
+    <h3 id="use-casesexamples">Use Cases/Examples</h3>
+
+    <ul>
+      <li>
+        <p>An author wants to include JavaScript provided by a third-party
+analytics service on her site. She wants, however, to ensure that only
+the code she&rsquo;s carefully reviewed is executed. She can do so by generating
+<a href="#dfn-integrity-metadata">integrity metadata</a> for the script she&rsquo;s planning on including, and
+adding it to the <code>script</code> element she includes on her page:</p>
+
+        <pre><code>&lt;script src="https://analytics-r-us.com/include.js"
+        integrity="ni:///sha-256;SDfwewFAE...wefjijfE"&gt;
+</code></pre>
+      </li>
+      <li>
+        <p>A software distribution service wants to ensure that files are correctly
+downloaded. It can do so by adding <a href="#dfn-integrity-metadata">integrity metadata</a> to the <code>a</code>
+elements which users click on to trigger a download:</p>
+
+        <pre><code>&lt;a href="https://software-is-nice.com/awesome.exe"
+   integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
+   download&gt;
+</code></pre>
+      </li>
+    </ul>
+
+  </section>
+  <!-- /Introduction::Use Cases -->
 </section>
 <!-- /Introduction -->
 

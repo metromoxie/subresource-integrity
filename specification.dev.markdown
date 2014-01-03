@@ -760,6 +760,8 @@ exploitation, user agents that take this approach to caching SHOULD use
 following are true:
 
 *   The integrity metadata contains a content type.
+*   The resource was delivered in response to an HTTP `GET` request (and not
+    `POST`, `OPTIONS`, `TRACE`, etc.)
 *   The resource was delivered with an `Access-Control-Allow-Origin` HTTP
     header with a value of `*` [[!CORS]]
 *   The integrity metadata uses a hash function with very strong uniqueness

@@ -532,6 +532,20 @@ or
     }
 
 Hope someone else has better ideas.
+
+---
+
+Tab suggested that idea #1 is bad, as it would be quite fragile and easy
+for authors to add or change resources without updating the integrity
+section.
+
+I think he's suggested something like:
+
+    .awesomeness {
+        background-image: integrity(<url>, <metadata>);
+    }
+    
+Following up with him for clarification.
 </div>
 
 </section><!-- /Framework::CSS -->

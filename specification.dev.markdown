@@ -83,7 +83,7 @@ a fallback system would enable. (mkwst)
     adding it to the `script` element she includes on her page:
 
         <script src="https://analytics-r-us.com/include.js"
-                integrity="ni:///sha-256;SDfwewFAE...wefjijfE">
+                integrity="ni:///sha-256;SDfwewFAE...wefjijfE"></script>
 
 *   A software distribution service wants to ensure that files are correctly
     downloaded. It can do so by adding [integrity metadata][] to the `a`
@@ -91,7 +91,15 @@ a fallback system would enable. (mkwst)
 
         <a href="https://software-is-nice.com/awesome.exe"
            integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
-           download>
+           download>...</a>
+
+*   An advertising network wishes to ensure that third-party content only
+    is pushed to users after review. They can ensure that only reviewed code is
+    delivered by adding [integrity metadata][] to the `iframe` element wrapping
+    the advertisement:
+    
+        <iframe src="https://awesome-ads.com/advertisement1.html"
+                integrity="ni:///sha-256;kasfdsaffs...eoirW-e"></iframe>
 
 </section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->

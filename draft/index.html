@@ -192,7 +192,7 @@ the code she&rsquo;s carefully reviewed is executed. She can do so by generating
 adding it to the <code>script</code> element she includes on her page:</p>
 
         <pre><code>&lt;script src="https://analytics-r-us.com/include.js"
-        integrity="ni:///sha-256;SDfwewFAE...wefjijfE"&gt;
+        integrity="ni:///sha-256;SDfwewFAE...wefjijfE"&gt;&lt;/script&gt;
 </code></pre>
       </li>
       <li>
@@ -202,7 +202,17 @@ elements which users click on to trigger a download:</p>
 
         <pre><code>&lt;a href="https://software-is-nice.com/awesome.exe"
    integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
-   download&gt;
+   download&gt;...&lt;/a&gt;
+</code></pre>
+      </li>
+      <li>
+        <p>An advertising network wishes to ensure that third-party content only
+is pushed to users after review. They can ensure that only reviewed code is
+delivered by adding <a href="#dfn-integrity-metadata">integrity metadata</a> to the <code>iframe</code> element wrapping
+the advertisement:</p>
+
+        <pre><code>&lt;iframe src="https://awesome-ads.com/advertisement1.html"
+        integrity="ni:///sha-256;kasfdsaffs...eoirW-e"&gt;&lt;/iframe&gt;
 </code></pre>
       </li>
     </ul>
@@ -660,6 +670,21 @@ one-offs if we think those are more likely). Something like:</p>
 </code></pre>
 
       <p>Hope someone else has better ideas.</p>
+
+      <hr />
+
+      <p>Tab suggested that idea #1 is bad, as it would be quite fragile and easy
+for authors to add or change resources without updating the integrity
+section.</p>
+
+      <p>I think he&rsquo;s suggested something like:</p>
+
+      <pre><code>.awesomeness {
+    background-image: integrity(&lt;url&gt;, &lt;metadata&gt;);
+}
+</code></pre>
+
+      <p>Following up with him for clarification.</p>
     </div>
 
   </section>
@@ -882,6 +907,8 @@ following are true:</p>
 
     <ul>
       <li>The integrity metadata contains a content type.</li>
+      <li>The resource was delivered in response to an HTTP <code>GET</code> request (and not
+<code>POST</code>, <code>OPTIONS</code>, <code>TRACE</code>, etc.)</li>
       <li>The resource was delivered with an <code>Access-Control-Allow-Origin</code> HTTP
 header with a value of <code>*</code> [[!CORS]]</li>
       <li>The integrity metadata uses a hash function with very strong uniqueness

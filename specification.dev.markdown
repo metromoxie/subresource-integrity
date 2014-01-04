@@ -788,6 +788,13 @@ with those resources stays in sync with the new content. One option
 would be simply to refuse to optimize resources for which a page author
 has requested integrity verification. Another option might be to modify
 the page as well as the resources to keep the digests up to date.
+
+TODO: Think about sending a `client-hints` header that expresses the
+intent to treat integrity as more important than other considerations
+(filesize, etc). If the header was present, proxies MUST send the
+canonical version of a resource. Also TODO: think about how this would
+effect `accept: image/webp`.
+{:.todo}
 </section><!-- /Implementation::proxies -->
 
 </section><!-- /Implementation -->

@@ -250,8 +250,9 @@ those the user agent has defined as &ldquo;secure&rdquo;.</p>
     <p>The <dfn>MIME type</dfn> of a resource is a technical hint about the use
 and format of that resource. [[!MIMETYPE]]</p>
 
-    <p>The <dfn>entity body</dfn> of a resource is defined by the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html">HTTP 1.1
-specification, section 7.2</a>. [[!HTTP11]]</p>
+    <p>The <dfn>entity body</dfn>, <dfn>transfer encoding</dfn>, <dfn>content
+encoding</dfn> and <dfn>message body</dfn> of a resource is defined by the
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html">HTTP 1.1 specification, section 7.2</a>. [[!HTTP11]]</p>
 
     <p>A <dfn>base64url encoding</dfn> is defined in
 <a href="http://tools.ietf.org/html/rfc4648#section-5">RFC 4648, section 5</a>. In a nutshell, it replaces the characters
@@ -342,7 +343,9 @@ cryptographic hash functions for use as part of a resource&rsquo;s
         <li>If <var>algorithm</var> is not a hash function recognized and supported
 by the user agent, return <code>null</code>.</li>
         <li>Let <var>result</var> be the result of applying <var>algorithm</var> to
-the binary representation of the <a href="#dfn-entity-body">entity body</a> of <var>resource</var>.</li>
+the content of the <a href="#dfn-entity-body">entity body</a> of <var>resource</var>, including any
+content coding that has been applied, but not including any
+transfer encoding applied to the message body.</li>
         <li>Let <var>encodedResult</var> be result of base64url-encoding
 <var>result</var>.</li>
         <li>Strip any trailing U+003D EQUALS SIGN (<code>=</code>) characters from
@@ -350,9 +353,9 @@ the binary representation of the <a href="#dfn-entity-body">entity body</a> of <
         <li>Return <var>encodedResult</var>.</li>
       </ol>
 
-      <p class="todo">TODO: It&rsquo;s not clear that &ldquo;binary representation of the entity body &hellip;&rdquo;
-does what we want. I don&rsquo;t think we yet have a good way of saying &ldquo;bits
-on the wire&rdquo;. See <a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky&rsquo;s WG post on this topic</a></p>
+      <p class="todo">TODO: #2 is pulled from the <code>content-md5</code> definition in [[!RFC2616]]. Is this
+the right way to say &ldquo;bits on the wire&rdquo;. See 
+<a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky&rsquo;s WG post on this topic</a></p>
 
     </section>
     <section>
@@ -934,6 +937,12 @@ with those resources stays in sync with the new content. One option
 would be simply to refuse to optimize resources for which a page author
 has requested integrity verification. Another option might be to modify
 the page as well as the resources to keep the digests up to date.</p>
+
+    <p class="todo">TODO: Think about sending a <code>client-hints</code> header that expresses the
+intent to treat integrity as more important than other considerations
+(filesize, etc). If the header was present, proxies MUST send the
+canonical version of a resource. Also TODO: think about how this would
+effect <code>accept: image/webp</code>.</p>
   </section>
   <!-- /Implementation::proxies -->
 

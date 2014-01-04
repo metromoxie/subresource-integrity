@@ -132,8 +132,9 @@ The term <dfn>origin</dfn> is defined in the Origin specification.
 The <dfn>MIME type</dfn> of a resource is a technical hint about the use
 and format of that resource. [[!MIMETYPE]]
 
-The <dfn>entity body</dfn> of a resource is defined by the [HTTP 1.1
-specification, section 7.2][entity]. [[!HTTP11]]
+The <dfn>entity body</dfn>, <dfn>transfer encoding</dfn>, <dfn>content
+encoding</dfn> and <dfn>message body</dfn> of a resource is defined by the
+[HTTP 1.1 specification, section 7.2][entity]. [[!HTTP11]]
 
 [entity]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html
 
@@ -226,16 +227,18 @@ cryptographic hash functions for use as part of a resource's
 1.  If <var>algorithm</var> is not a hash function recognized and supported
     by the user agent, return `null`.
 2.  Let <var>result</var> be the result of applying <var>algorithm</var> to
-    the binary representation of the [entity body][] of <var>resource</var>.
+    the content of the [entity body][] of <var>resource</var>, including any
+    content coding that has been applied, but not including any
+    transfer encoding applied to the message body.
 3.  Let <var>encodedResult</var> be result of base64url-encoding
     <var>result</var>.
 4.  Strip any trailing U+003D EQUALS SIGN (`=`) characters from
     <var>encodedResult</var>.
 5.  Return <var>encodedResult</var>.
 
-TODO: It's not clear that "binary representation of the entity body ..."
-does what we want. I don't think we yet have a good way of saying "bits
-on the wire". See [bzbarsky's WG post on this topic][bz]
+TODO: #2 is pulled from the `content-md5` definition in [[!RFC2616]]. Is this
+the right way to say "bits on the wire". See 
+[bzbarsky's WG post on this topic][bz]
 {:.todo}
 
 [apply-algorithm]: #apply-algorithm-to-resource

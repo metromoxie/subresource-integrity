@@ -942,15 +942,15 @@ Hint][], as described below:</p>
 in general.</p>
 
   <section>
-    <h3 id="the-ch-integrity-client-hint">The <code>CH-INTEGRITY</code> client hint</h3>
+    <h3 id="the-ch-integrity-client-hint">The <code>CH-Integrity</code> client hint</h3>
 
-    <p>The <code>CH-INTEGRITY</code> HTTP request header informs a server that a
+    <p>The <code>CH-Integrity</code> HTTP request header informs a server that a
 resource will only be accepted if delivered in its canonical form:
 in other words, the page author has placed a higher importance on
 integrity than other considerations (filesize, performance, etc).</p>
 
-    <pre><code>"CH-INTEGRITY:" integrityValue
-integrityValue = 1#( 1 / 0 )
+    <pre><code>"CH-Integrity:" integrity-value
+integrity-value = 1#( 1 / 0 )
 </code></pre>
 
     <p>A value of <code>1</code> means that the requested resource SHOULD be delivered
@@ -1010,6 +1010,33 @@ instance).</p>
 
 </section>
 <!-- /Security -->
+
+<section>
+  <h2 id="iana-considerations">IANA Considerations</h2>
+
+  <p>The permanent message header field registry (see [[!RFC3864]]) should be
+updated with the following registration:</p>
+
+  <section>
+    <h3 id="ch-integrity"><code>CH-Integrity</code></h3>
+
+    <dl>
+      <dt>Header field name</dt>
+      <dd>CH-Integrity</dd>
+      <dt>Applicable protocol</dt>
+      <dd>http</dd>
+      <dt>Status</dt>
+      <dd>standard</dd>
+      <dt>Author/Change controller</dt>
+      <dd>W3C</dd>
+      <dt>Specification document</dt>
+      <dd>this specification (See <a href="#the-ch-integrity-client-hint">The <code>CH-Integrity</code> client hint</a>)</dd>
+    </dl>
+
+  </section>
+  <!-- /IANA::CH-Integrity -->
+</section>
+<!-- /IANA -->
 
 <section>
   <h2 id="acknowledgements">Acknowledgements</h2>

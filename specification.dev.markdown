@@ -777,25 +777,38 @@ hash functions seems like a reasonable start...
 </section><!-- /Caching -->
 
 <section>
-## Implementation Considerations
-
-<section>
-### Proxies
+## Proxies
 
 Optimizing proxies and other intermediate servers which modify the
 content of fetched resources MUST ensure that the digest associated
 with those resources stays in sync with the new content. One option
-would be simply to refuse to optimize resources for which a page author
-has requested integrity verification. Another option might be to modify
-the page as well as the resources to keep the digests up to date.
+is to ensure that the [integrity metadata][] associated with
+resources is updated along with the resource itself. Another
+would be simply to deliver only the canonical version of resources
+for which a page author has requested integrity verification. To
+support this latter option, user agents MAY send an [HTTP Client
+Hint][], as described below:
 
-TODO: Think about sending a `client-hints` header that expresses the
-intent to treat integrity as more important than other considerations
-(filesize, etc). If the header was present, proxies MUST send the
-canonical version of a resource. Also TODO: think about how this would
-effect `accept: image/webp`.
+TODO: think about how integrity checks would effect `vary` headers
+in general.
 {:.todo}
-</section><!-- /Implementation::proxies -->
+
+<section>
+### The `CH-INTEGRITY` client hint
+
+The `CH-INTEGRITY` HTTP request header informs a server that a
+resource will only be accepted if delivered in its canonical form:
+in other words, the page author has placed a higher importance on
+integrity than other considerations (filesize, performance, etc).
+
+    "CH-INTEGRITY:" integrityValue
+    integrityValue = 1#( 1 / 0 )
+    
+A value of `1` means that the requested resource SHOULD be delivered
+in its canonical form, without modification. A value of `0` means
+that integrity checking is irrelevant to this fetch, and modifications
+MAY be performed without violating integrity checks.
+</section><!-- /Proxies::ClientHint -->
 
 </section><!-- /Implementation -->
 

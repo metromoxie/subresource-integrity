@@ -794,15 +794,15 @@ in general.
 {:.todo}
 
 <section>
-### The `CH-INTEGRITY` client hint
+### The `CH-Integrity` client hint
 
-The `CH-INTEGRITY` HTTP request header informs a server that a
+The `CH-Integrity` HTTP request header informs a server that a
 resource will only be accepted if delivered in its canonical form:
 in other words, the page author has placed a higher importance on
 integrity than other considerations (filesize, performance, etc).
 
-    "CH-INTEGRITY:" integrityValue
-    integrityValue = 1#( 1 / 0 )
+    "CH-Integrity:" integrity-value
+    integrity-value = 1#( 1 / 0 )
     
 A value of `1` means that the requested resource SHOULD be delivered
 in its canonical form, without modification. A value of `0` means
@@ -855,6 +855,34 @@ instance).
 </section><!-- /Security::cross-origin -->
 
 </section><!-- /Security -->
+
+<section>
+## IANA Considerations
+
+The permanent message header field registry (see [[!RFC3864]]) should be
+updated with the following registration:
+
+<section>
+### `CH-Integrity`
+
+Header field name
+: CH-Integrity
+
+Applicable protocol
+: http
+
+Status
+: standard
+
+Author/Change controller
+: W3C
+
+Specification document
+: this specification (See [The `CH-Integrity` client hint][hint])
+
+[hint]: #the-ch-integrity-client-hint
+</section><!-- /IANA::CH-Integrity -->
+</section><!-- /IANA -->
 
 <section>
 ## Acknowledgements

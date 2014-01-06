@@ -568,7 +568,7 @@ Following up with him for clarification.
 <section>
 ### Verification of JS-loaded subresources
 
-<section>
+<section class="todo">
 #### Workers
 
 To validate the integrity of scripts which are to be run as workers, a new
@@ -628,7 +628,7 @@ algorithm:
 
 </section><!-- /Framework::JS::Workers -->
 
-<section>
+<section class="todo">
 #### XMLHttpRequest
 
 To validate the integrity of resources loaded via `XMLHttpRequest`, a new

@@ -343,29 +343,35 @@ Documents may specify the behavior of a failed integrity check by delivering
 a [Content Security Policy][csp] which contains an `integrity-policy`
 directive, defined by the following ABNF grammar:
 
-    directive-name: "integrity-policy"
-    directive-value: "block" / "report" / "fallback"
+    directive-name  = "integrity-policy"
+    directive-value = 1#failure-mode [ "require-for-all" ]
+    failure-mode    = ( "block" / "report" / "fallback" )
 
 A documents's <dfn>integrity policy</dfn> is the value of the
 `integrity-policy` directive, if explicitly provided as part of the
 document's Content Security Policy, or `block` otherwise.
 
-If the document's integrity policy is `block`, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST
+If the document's integrity policy contains `block`, the user agent MUST refuse
+to render or execute resources that fail an integrity check, <em>and</em> MUST
 [report a violation][].
 
-If the document's integrity policy is `report`, the user agent MAY render or
-execute resources that fail an integrity check, <em>but</em> MUST
+If the document's integrity policy contains `report`, the user agent MAY render
+or execute resources that fail an integrity check, <em>but</em> MUST
 [report a violation][].
 
-If the document's integrity policy is `fallback`, the user agent MUST refuse
-to render or execute resources that fail an integrity check, <em>and</em>
+If the document's integrity policy contains `fallback`, the user agent MUST
+refuse to render or execute resources that fail an integrity check, <em>and</em>
 MUST [report a violation][]. The user agent MAY additionally choose to load
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
 execute the resource, <em>and</em> MUST [report a(nother)
 violation][report a violation]. (See [the `noncanonical-src`
 attribute][noncanonical] for a strawman of how that might look).
+{:.todo}
+
+If the document's integrity policy contains `require-for-all`, the user agent
+MUST treat the lack of [integrity metadata][] for an resource as automatic
+failure.
 {:.todo}
 
 [csp]: http://w3.org/TR/CSP11

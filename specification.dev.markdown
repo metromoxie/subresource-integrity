@@ -762,9 +762,9 @@ metadata][match].
 #### Recommendations
 
 To mitigate the risk of cross-origin data leakage or type-sniffing
-exploitation, user agents that take this approach to caching SHOULD use
-[integrity metadata][] as a cache identifier <em>only</em> when the
-following are true:
+exploitation, user agents that take this approach to caching MUST NOT
+use [integrity metadata][] as a cache identifier unless the following
+are all true:
 
 *   The integrity metadata contains a content type.
 *   The resource was delivered in response to an HTTP `GET` request (and not

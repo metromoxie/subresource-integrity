@@ -852,10 +852,10 @@ resource didn't match the hash, and thereby gain some insight into its
 contents. This might reveal, for example, whether or not a user is
 logged into a particular service.
 
-User agents SHOULD mitigate the risk by refusing to trigger `error`
-handlers for cross-origin resources, but some side-channels will likely
-be difficult to avoid (image's `naturalHeight`/`naturalWidth` for
-instance).
+User agents SHOULD mitigate the risk by refusing to trigger elements'
+`error` handlers for cross-origin resources, but some side-channels
+will likely be difficult to avoid (image's `naturalHeight` and
+`naturalWidth` for instance).
 </section><!-- /Security::cross-origin -->
 
 </section><!-- /Security -->

@@ -26,7 +26,7 @@
             { name: "Frederik Braun", url: "mailto:fbraun@mozilla.com", company: "Mozilla Corporation", companyURL: "http://www.mozilla.com/" },
             { name: "Devdatta Akhawe", url: "mailto:dev.akhawe@gmail.com", company: "UC Berkeley", companyURL: "http://www.mozilla.com/" },
             { name: "Joel Weinberger", url: "mailto:jww@google.com", company: "Google, Inc.", companyURL: "http://google.com/" },
-            { name: "Mike West", url: "mailto:mkwst@google.com", company: "Mozilla Corporation", companyURL: "http://google.com/" },
+            { name: "Mike West", url: "mailto:mkwst@google.com", company: "Google, Inc.", companyURL: "http://google.com/" },
         ],
 
         // name of the WG
@@ -135,8 +135,8 @@ on their own origin. Specifying that the <em>expected</em> SHA-256 hash of
 is <code>C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg</code> means
 that the user agent can verify that the data it loads from that URL matches
 that expected hash before executing the JavaScript it contains. This
-integrity verification significantly reduces the risk that an active
-network attacker can substitute malicious content.</p>
+integrity verification significantly reduces the risk that an attacker can
+substitute malicious content.</p>
 
   <p>This example can be communicated to a user agent by adding the hash to a
 <code>script</code> element, like so:</p>
@@ -353,9 +353,8 @@ transfer encoding applied to the message body.</li>
         <li>Return <var>encodedResult</var>.</li>
       </ol>
 
-      <p class="todo">TODO: #2 is pulled from the <code>content-md5</code> definition in [[!RFC2616]]. Is this
-the right way to say &ldquo;bits on the wire&rdquo;. See 
-<a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky&rsquo;s WG post on this topic</a></p>
+      <p class="todo">TODO: #2 is pulled from the <code>content-md5</code> definition in [[!HTTP11]]. It&rsquo;s
+unclear that it&rsquo;s what we want. See  <a href="http://lists.w3.org/Archives/Public/public-webappsec/2013Dec/0048.html">bzbarsky&rsquo;s WG post on this topic</a></p>
 
     </section>
     <section>
@@ -381,6 +380,10 @@ return <code>false</code>.</li>
         <li>If <var>actualValue</var> is a case-sensitive match for
 <var>expectedValue</var>, return <code>true</code>. Otherwise, return <code>false</code>.</li>
       </ol>
+
+      <p class="note">If <var>expectedType</var> is the empty string in #6, it would
+be reasonable for the user agent to warn the page&rsquo;s author about the
+dangers of MIME type confusion attacks via its developer console.</p>
 
     </section>
   </section>
@@ -452,30 +455,35 @@ discuss things a bit more. (mkwst)</p>
 a <a href="http://w3.org/TR/CSP11">Content Security Policy</a> which contains an <code>integrity-policy</code>
 directive, defined by the following ABNF grammar:</p>
 
-      <pre><code>directive-name: "integrity-policy"
-directive-value: "block" / "report" / "fallback"
+      <pre><code>directive-name  = "integrity-policy"
+directive-value = 1#failure-mode [ "require-for-all" ]
+failure-mode    = ( "block" / "report" / "fallback" )
 </code></pre>
 
       <p>A documents&rsquo;s <dfn>integrity policy</dfn> is the value of the
 <code>integrity-policy</code> directive, if explicitly provided as part of the
 document&rsquo;s Content Security Policy, or <code>block</code> otherwise.</p>
 
-      <p>If the document&rsquo;s integrity policy is <code>block</code>, the user agent MUST refuse to
-render or execute resources that fail an integrity check, <em>and</em> MUST
+      <p>If the document&rsquo;s integrity policy contains <code>block</code>, the user agent MUST refuse
+to render or execute resources that fail an integrity check, <em>and</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p>If the document&rsquo;s integrity policy is <code>report</code>, the user agent MAY render or
-execute resources that fail an integrity check, <em>but</em> MUST
+      <p>If the document&rsquo;s integrity policy contains <code>report</code>, the user agent MAY render
+or execute resources that fail an integrity check, <em>but</em> MUST
 <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>.</p>
 
-      <p class="todo">If the document&rsquo;s integrity policy is <code>fallback</code>, the user agent MUST refuse
-to render or execute resources that fail an integrity check, <em>and</em>
+      <p class="todo">If the document&rsquo;s integrity policy contains <code>fallback</code>, the user agent MUST
+refuse to render or execute resources that fail an integrity check, <em>and</em>
 MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a violation</a>. The user agent MAY additionally choose to load
 a fallback resource as specified for each relevant element. If the fallback
 resource fails an integrity check, the user agent MUST refuse to render or
 execute the resource, <em>and</em> MUST <a href="http://www.w3.org/TR/CSP11/#dfn-report-a-violation">report a(nother)
 violation</a>. (See <a href="#the-noncanonical-src-attribute">the <code>noncanonical-src</code>
 attribute</a> for a strawman of how that might look).</p>
+
+      <p class="todo">If the document&rsquo;s integrity policy contains <code>require-for-all</code>, the user agent
+MUST treat the lack of <a href="#dfn-integrity-metadata">integrity metadata</a> for an resource as automatic
+failure.</p>
 
     </section>
 
@@ -696,7 +704,7 @@ section.</p>
   <section>
     <h3 id="verification-of-js-loaded-subresources">Verification of JS-loaded subresources</h3>
 
-    <section>
+    <section class="todo">
       <h4 id="workers">Workers</h4>
 
       <p>To validate the integrity of scripts which are to be run as workers, a new
@@ -763,7 +771,7 @@ global scope</var>, <a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-
     </section>
     <!-- /Framework::JS::Workers -->
 
-    <section>
+    <section class="todo">
       <h4 id="xmlhttprequest">XMLHttpRequest</h4>
 
       <p>To validate the integrity of resources loaded via <code>XMLHttpRequest</code>, a new
@@ -904,9 +912,9 @@ metadata</a>.</p>
     <h4 id="recommendations">Recommendations</h4>
 
     <p>To mitigate the risk of cross-origin data leakage or type-sniffing
-exploitation, user agents that take this approach to caching SHOULD use
-<a href="#dfn-integrity-metadata">integrity metadata</a> as a cache identifier <em>only</em> when the
-following are true:</p>
+exploitation, user agents that take this approach to caching MUST NOT
+use <a href="#dfn-integrity-metadata">integrity metadata</a> as a cache identifier unless the following
+are all true:</p>
 
     <ul>
       <li>The integrity metadata contains a content type.</li>
@@ -1001,10 +1009,10 @@ resource didn&rsquo;t match the hash, and thereby gain some insight into its
 contents. This might reveal, for example, whether or not a user is
 logged into a particular service.</p>
 
-    <p>User agents SHOULD mitigate the risk by refusing to trigger <code>error</code>
-handlers for cross-origin resources, but some side-channels will likely
-be difficult to avoid (image&rsquo;s <code>naturalHeight</code>/<code>naturalWidth</code> for
-instance).</p>
+    <p>User agents SHOULD mitigate the risk by refusing to trigger elements&rsquo;
+<code>error</code> handlers for cross-origin resources, but some side-channels
+will likely be difficult to avoid (image&rsquo;s <code>naturalHeight</code> and
+<code>naturalWidth</code> for instance).</p>
   </section>
   <!-- /Security::cross-origin -->
 

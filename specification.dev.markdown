@@ -35,8 +35,8 @@ on their own origin. Specifying that the _expected_ SHA-256 hash of
 is `C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg` means
 that the user agent can verify that the data it loads from that URL matches
 that expected hash before executing the JavaScript it contains. This
-integrity verification significantly reduces the risk that an active
-network attacker can substitute malicious content.
+integrity verification significantly reduces the risk that an attacker can
+substitute malicious content.
 
 This example can be communicated to a user agent by adding the hash to a
 `script` element, like so:

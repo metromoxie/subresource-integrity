@@ -264,6 +264,11 @@ unclear that it's what we want. See  [bzbarsky's WG post on this topic][bz]
 10. If <var>actualValue</var> is a case-sensitive match for
     <var>expectedValue</var>, return `true`. Otherwise, return `false`.
 
+If <var>expectedType</var> is the empty string in #6, it would
+be reasonable for the user agent to warn the page's author about the
+dangers of MIME type confusion attacks via its developer console.
+{:.note}
+
 [match]: #does-resource-match-metadata
 </section>
 </section>

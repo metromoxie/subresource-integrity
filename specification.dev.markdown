@@ -236,9 +236,8 @@ cryptographic hash functions for use as part of a resource's
     <var>encodedResult</var>.
 5.  Return <var>encodedResult</var>.
 
-TODO: #2 is pulled from the `content-md5` definition in [[!RFC2616]]. Is this
-the right way to say "bits on the wire". See 
-[bzbarsky's WG post on this topic][bz]
+TODO: #2 is pulled from the `content-md5` definition in [[!HTTP11]]. It's
+unclear that it's what we want. See  [bzbarsky's WG post on this topic][bz]
 {:.todo}
 
 [apply-algorithm]: #apply-algorithm-to-resource

@@ -283,6 +283,53 @@ dangers of MIME type confusion attacks via its developer console.
 </section><!-- Algorithms -->
 
 <section>
+### Modifications to Fetch
+
+The Fetch specification should contain the following modifications in order
+to enable the rest of this specification's work:
+
+1.  The following text should be added to section 2.2: "A
+    [request][fetch-request] has an associated [integrity metadata][].
+    Unless stated otherwise, a request's integrity metadata is the empty
+    string."
+
+2.  The following text should be added to section 2.3: "A
+    [response][fetch-response] has an associated integrity state, which
+    is one of `indeterminate`, `pending`, `corrupt`, and `intact`. Unless
+    stated otherwise, it is `indeterminate`.
+
+3.  A "HTTP `CH-Integrity` header" section should be added to section
+    3, containing the contents of [section 5.1][5.1] of this specification.
+
+4.  Add the following steps to both the "basic fetch" and "CORS fetch with
+    preflight" algorithms:
+
+    1.  If <var>request</var>'s integrity metadata is the empty string, set
+        <var>response</var>'s integrity state to `indeterminate`. Otherwise:
+
+        1.  Set <var>response</var>'s integrity state to `pending`.
+        2.  Include a `CH-Integity` header whose value is "1".
+
+5.  Before firing the [process response end-of-file][] event for any
+    <var>request</var>:
+
+    1.  If the <var>request</var>'s integrity metadata is the empty string, set
+        the <var>response</var>'s integrity state to `indeterminate` and
+        skip directly to firing the event.
+
+    2.  If <var>response</var> [matches][match] the request's integrity
+        metadata, set the <var>response</var>'s integrity state to `intact`
+        and skip directly to firing the event.
+
+    3.  Set the <var>response</var>'s integrity state to `corrupt`
+        and skip directly to firing the event.
+
+[fetch-request]: http://fetch.spec.whatwg.org/#concept-request
+[fetch-response]: http://fetch.spec.whatwg.org/#concept-response
+[5.1]: #the-ch-integrity-client-hint
+</section>
+
+<section>
 ### Verification of HTML document subresources
 
 A variety of HTML elements result in requests for resources that are to be
@@ -394,14 +441,21 @@ failure.
 <section>
 ###### The `a` element
 
-If an `a` element has a non-empty `integrity` attribute, then, when handling the
-resource the link points to [as a download][], perform the following step before
+Change step 6 of the [downloads a hyperlink][] algorithm to read:
+
+6. [Fetch][] <var>URL</var> with [integrity metadata][] set to the value of the
+   `integrity` attribute of that element, and handle the resulting resource
+   [as a download][].
+{:start="6"}
+
+[downloads a hyperlink]: http://www.w3.org/TR/html5/links.html#downloading-hyperlinks
+
+When handling a resource [as a download][], perform the following step before
 providing a user with a way to save the resource for later use:
 
-*   If the resource [does not match][match] the integrity metadata specified in
-    the `a` element's `integrity` attribute, the user agent MUST [report a
-    violation][], <em>and</em> MUST abort the download if the document's
-    [integrity policy][] is `block`.
+*   If <var>response</var>'s integrity state is `corrupt` and the document's
+    [integrity policy][] is `block`, the user agent MUST [report a violation][],
+    <em>and</em> MUST abort the download.
 
 <div class="note">
 Note that this should cover both downloads triggered by HTTP headers like
@@ -413,7 +467,6 @@ on the `a` element. It might look like the following:
        download>Download!</a>
 </div>
 
-
 [as a download]: http://www.w3.org/TR/html5/links.html#as-a-download
 </section><!-- /Framework::HTML::a -->
 
@@ -421,17 +474,14 @@ on the `a` element. It might look like the following:
 ###### The `iframe` element
 
 When content is to be loaded into the [child browsing context][] created
-by an `iframe` element that has a non-empty `integrity` attribute:
+by an `iframe`, perform fetches with the [integrity metadata][] set to the
+value of the `iframe` element's `integrity` attribute. Moreover:
 
 *   The user agent MUST delay rendering the content until the
     [fetching algorithm][]'s task to [process request end-of-file][]
     completes.
 *   When the [process request end-of-file][] task completes:
-    1.  Let <var>metadata</var> be the value of the document's browsing context
-        owner `iframe` element's `integrity` attribute.
-    2.  Let <var>resource</var> be the response returned from the fetching
-        algorithm.
-    3.  If [<var>resource</var> does not match <var>metadata</var>][match]:
+    3.  If the request's integrity state is `corrupt`:
         1. If <var>resource</var> is [CORS same-origin][] with the document's
            browsing context owner `iframe` element's Document, then
            [queue a task][] to [fire a simple event][] named `error` at the
@@ -460,14 +510,12 @@ what about other use-cases?
 ###### The `link` element
 
 Whenever a user agent attempts to [obtain a resource][] pointed to by a
-`link` element that has a non-empty `integrity` attribute, perform the
+`link` element, set the [integrity metadata][] of the request to the value
+of the element's `integrity` attribute. Additionally, perform the
 following steps before firing a `load` event at the element:
 
-1.  Let <var>metadata</var> be the value of the `link` element's
-    `integrity` attribute.
-2.  Let <var>resource</var> be the response returned from the fetching
-    algorithm.
-3.  If [<var>resource</var> does not match <var>metadata</var>][match]:
+1.  If the response's integrity state is `corrupt`, and the document's
+    [integrity policy][] is `block`:
     1.  Abort the `load` event, and treat the resource as having failed to
         load.
     2.  If <var>resource</var> is [CORS same-origin][] with the `link`
@@ -485,17 +533,12 @@ following steps before firing a `load` event at the element:
 Insert the following steps after step 5 of step 14 of HTML5's
 ["prepare a script" algorithm][prepare]:
 
-6.  Let <var>metadata</var> be the value of the element's `integrity`
-    attribute.
-7.  If <var>metadata</var> is the empty string, skip the remaining steps.
 8.  Once the [fetching algorithm][] has completed:
-    1.  Let <var>resource</var> be the response returned from the fetching
-        algorithm.
-    2.  If [<var>resource</var> does not match <var>metadata</var>][match]:
-        1.  If the document's [integrity policy][] is `block`, [queue a
-            task][] to [fire a simple event][] named `error`
-            at the element, and abort these steps.
-        2.  If the document's [integrity policy][] is `fallback`...
+    2.  If the response's integrity state is `corrupt`, and the document's
+        [integrity policy][] is `block`:
+        1.  If <var>resource</var> is [CORS same-origin][] with the `link`
+            element's Document, then [queue a task][] to [fire a simple
+            event][] named `error` at the element, and abort these steps.
 {:start="6"}
 
 [prepare]: http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script
@@ -633,11 +676,10 @@ invoked:
 Add the following step directly after step 4 of the [run a worker][runworker]
 algorithm:
 
-5. If the script resource fetched in step 4 [does not match][match] the
-   integrity metadata in the worker's `integrity` attribute, then for
-   each `Worker` or `SharedWorker` object associated with <var>worker
-   global scope</var>, [queue a task][] to [fire a simple event][] named
-   `error` at that object. Abort these steps.
+5. If the script resource fetched in step 4 has an integrity status of
+   `corrupt`, then for each `Worker` or `SharedWorker` object associated
+   with <var>worker global scope</var>, [queue a task][] to [fire a
+   simple event][] named `error` at that object. Abort these steps.
 {:start="5"}
 </section><!-- /Framework::JS::Workers::validation -->
 

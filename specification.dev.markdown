@@ -241,7 +241,7 @@ unclear that it's what we want. See  [bzbarsky's WG post on this topic][bz]
 {:.todo}
 
 [apply-algorithm]: #apply-algorithm-to-resource
-</section>
+</section><!-- Algorithms::apply -->
 <section>
 #### Does <var>resource</var> match <var>metadata</var>?
 
@@ -270,8 +270,8 @@ dangers of MIME type confusion attacks via its developer console.
 {:.note}
 
 [match]: #does-resource-match-metadata
-</section>
-</section>
+</section><!-- Algorithms::Match -->
+</section><!-- Algorithms -->
 
 <section>
 ### Verification of HTML document subresources

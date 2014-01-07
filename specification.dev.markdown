@@ -107,7 +107,8 @@ a fallback system would enable. (mkwst)
 
 *   The author of a mash-up wants to make sure her creation remains in a working
     state. Adding [integrity metadata][] to external subresources helps defining an
-    expected revision of the included files. The author can then use an `integrity-policy` to be notified of changes in the included resources.
+    expected revision of the included files. The author can then use an
+    `integrity-policy` to be notified of changes in the included resources.
 
 </section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->

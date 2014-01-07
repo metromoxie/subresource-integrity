@@ -101,6 +101,15 @@ a fallback system would enable. (mkwst)
         <iframe src="https://awesome-ads.com/advertisement1.html"
                 integrity="ni:///sha-256;kasfdsaffs...eoirW-e"></iframe>
 
+*   A user-agent wants to make sure that the integrity of public web pages used
+    for internal features. Using [integrity metadata][] helps mitigating the
+    risks of JavaScript running in an elevated context.
+
+*   The author of a mash-up wants to make sure her creation remains in a working
+    state. Adding [integrity metadata][] to external subresources helps defining an
+    expected revision of the included files. The author can then use an
+    `integrity-policy` to be notified of changes in the included resources.
+
 </section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->
 

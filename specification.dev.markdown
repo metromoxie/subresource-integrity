@@ -20,11 +20,13 @@ a different server (via DNS poisioning, or other such means), the author has
 no recourse. Likewise, an attacker who can replace the file on the CDN server
 has the ability to inject arbitrary content.
 
-We can mitigate the risk of these kinds of attacks by allowing authors to
-more clearly explain to the user agent _exactly_ which resource they intend
-to load. If an author can provide integrity metadata above and beyond the
-bare URL, then the user agent can validate that the data fetched from the
-URL provied actually matches the authors' intent.
+Delivering resources over a secure channel mitigates some of this risk: with
+TLS, [HSTS][], and [pinned public keys][], a user agent can be fairly certain
+that it is indeed speaking with the server it believes it's talking to. The
+threat of a attacker (or admin!) manipulating content on a third-party server
+is very common in advertising networks, for instance. Ideally, authors would
+not only be able to pin the keys of a server, but also pin the _content_,
+ensuring that the exact resource, and _only_ that resource, loads.
 
 This document specifies such a validation scheme, extending several HTML
 elements with a `integrity` attribute that contains a cryptographic hash of
@@ -44,31 +46,53 @@ This example can be communicated to a user agent by adding the hash to a
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"
             integrity="ni:///sha-256;C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg">
 
-The mechanism specified here may also be useful for purposes other than
+Scripts, of course, are not the only resource type which would benifit
+from integrity validation. The scheme specified here applies to all HTML
+elements which trigger fetches, as well as to fetches triggered from CSS
+and JavaScript.
+
+Moreover, integrity metadata may also be useful for purposes other than
 validation. User agents may decide to use the integrity metadata as an
 identifier in a local cache, for instance, meaning that common resources
-(for example, JavaScript libraries) could be cached and retrieved regardless
-of their URL.
+(for example, JavaScript libraries) could be cached and retrieved once,
+regardless of the URL from which they are loaded.
+
+[HSTS]: http://tools.ietf.org/html/rfc6797
+[pinned public keys]: http://tools.ietf.org/html/draft-ietf-websec-key-pinning
 
 <section>
 ### Goals
 
-1.  Provide authors with a mechanism of reducing the ambient authority
-    of a host (e.g. a content delivery network, or a social network that
-    provides widgets) from whom they wish to include JavaScript. Authors
-    should be able to grant authority to load _a_ script, not _any_
-    script, and compromise of the third-party service should not
-    automatically mean compromise of every site which includes its
-    scripts.
+1.  Compromise of the third-party service should not automatically mean
+    compromise of every site which includes its scripts. Content authors
+    will have a mechanism by which they can specify expectations for
+    content they load, meaning for example that they could load a
+    _specific_ script, and not _any_ script that happens to have a
+    particular URL.
 
-2.  Improved cachability of common resources: if the user agent downloads
-    jQuery once, it shouldn't have to download it again, even if it comes
-    from a new URL.
+2.  The verification mechanism should extend to all resource types that
+    a page may fetch in the course of its execution and rendering. Active
+    content (scripts, style, `iframe` contents, etc) are, of course,
+    critical, but inactive content such as images and fonts will also be
+    covered.
 
-3.  (potentially) Relax mixed-content warnings for resources whose
-    integrity is verified.
+3.  The verification mechanism should have reporting functionality which
+    would inform the author that an invalid resource was downloaded.
+    Further it should be possible for an author to choose to run _only_
+    the reporting functionality, allowing potentially corrupt resources
+    to run on her site, but flagging violations for manual review.
 
-I'm not sure about #3. Get more detail from the WG about the benefits that
+4.  The metadata provided for verification will enable improvements to
+    user agents' caching schemes: common resources such as JavaScript
+    libraries can be downloaded once, and only once, even if multiple
+    instances with distinct URLs are requested.
+
+5.  (potentially) Relax mixed-content warnings for resources whose
+    integrity is verified. If the integrity metadata for a resource
+    is delivered over a secure channel, the user agent might choose to
+    allow loading the resource over an insecure channel.
+
+I'm not sure about #5. Get more detail from the WG about the benefits that
 a fallback system would enable. (mkwst)
 {:.todo}
 </section><!-- /Introduction::Goals -->
@@ -82,16 +106,8 @@ a fallback system would enable. (mkwst)
     [integrity metadata][] for the script she's planning on including, and
     adding it to the `script` element she includes on her page:
 
-        <script src="https://analytics-r-us.com/include.js"
+        <script src="https://analytics-r-us.com/v1.0/include.js"
                 integrity="ni:///sha-256;SDfwewFAE...wefjijfE"></script>
-
-*   A software distribution service wants to ensure that files are correctly
-    downloaded. It can do so by adding [integrity metadata][] to the `a`
-    elements which users click on to trigger a download:
-
-        <a href="https://software-is-nice.com/awesome.exe"
-           integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
-           download>...</a>
 
 *   An advertising network wishes to ensure that third-party content only
     is pushed to users after review. They can ensure that only reviewed code is
@@ -101,14 +117,23 @@ a fallback system would enable. (mkwst)
         <iframe src="https://awesome-ads.com/advertisement1.html"
                 integrity="ni:///sha-256;kasfdsaffs...eoirW-e"></iframe>
 
-*   A user-agent wants to make sure that the integrity of public web pages used
-    for internal features. Using [integrity metadata][] helps mitigating the
-    risks of JavaScript running in an elevated context.
+*   A software distribution service wants to ensure that files are correctly
+    downloaded. It can do so by adding [integrity metadata][] to the `a`
+    elements which users click on to trigger a download:
+
+        <a href="https://software-is-nice.com/awesome.exe"
+           integrity="ni:///sha-256;fkfrewFRFEFHJR...wfjfrErw"
+           download>...</a>
+
+*   A user agent wishes to ensure that pieces of its UI which are rendered via
+    HTML aren't manipulated before display. [Integrity metadata][] mitigates the
+    risk that altered JavaScript from the public web or from the local filesystem
+    will run in a high-privilege context.
 
 *   The author of a mash-up wants to make sure her creation remains in a working
-    state. Adding [integrity metadata][] to external subresources helps defining an
-    expected revision of the included files. The author can then use an
-    `integrity-policy` to be notified of changes in the included resources.
+    state. Adding [integrity metadata][] to external subresources defines an
+    expected revision of the included files. The author can then use the reporting
+    functionality to be notified of chanfes to the included resources.
 
 </section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->

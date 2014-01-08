@@ -335,7 +335,7 @@ to enable the rest of this specification's work:
         1.  Set <var>response</var>'s integrity state to `pending`.
         2.  Include a `CH-Integity` header whose value is "1".
 
-5.  Before firing the [process response end-of-file][] event for any
+5.  Before firing the [process request end-of-file][] event for any
     <var>request</var>:
 
     1.  If the <var>request</var>'s integrity metadata is the empty string, set

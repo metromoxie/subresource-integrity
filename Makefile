@@ -1,10 +1,10 @@
-all: clean draft/index.html
+all: clean index.html
 
 clean:
-	rm -rf draft/index.html
+	rm -rf index.html
 
-draft/index.html: specification.dev.markdown template.erb
-	kramdown --parse-block-html --template='template.erb' specification.dev.markdown > draft/index.html
+index.html: specification.dev.markdown template.erb
+	kramdown --parse-block-html --template='template.erb' specification.dev.markdown > index.html
 
 publish: all
 	git commit -am Regenerate.

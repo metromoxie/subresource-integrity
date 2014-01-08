@@ -18,7 +18,7 @@
         copyrightStart: "2013",
 
         // if there a publicly available Editor's Draft, this is the link
-        edDraftURI:           "http://todo.com/todo",
+        edDraftURI:           "http://w3c.github.io/webappsec/specs/subresourceintegrity/",
 
         // editors, add as many as you like
         // only "name" is required
@@ -120,11 +120,13 @@ a different server (via DNS poisioning, or other such means), the author has
 no recourse. Likewise, an attacker who can replace the file on the CDN server
 has the ability to inject arbitrary content.</p>
 
-  <p>We can mitigate the risk of these kinds of attacks by allowing authors to
-more clearly explain to the user agent <em>exactly</em> which resource they intend
-to load. If an author can provide integrity metadata above and beyond the
-bare URL, then the user agent can validate that the data fetched from the
-URL provied actually matches the authors&#8217; intent.</p>
+  <p>Delivering resources over a secure channel mitigates some of this risk: with
+TLS, <a href="http://tools.ietf.org/html/rfc6797">HSTS</a>, and <a href="http://tools.ietf.org/html/draft-ietf-websec-key-pinning">pinned public keys</a>, a user agent can be fairly certain
+that it is indeed speaking with the server it believes it&#8217;s talking to. The
+threat of a attacker (or admin!) manipulating content on a third-party server
+is very common in advertising networks, for instance. Ideally, authors would
+not only be able to pin the keys of a server, but also pin the <em>content</em>,
+ensuring that the exact resource, and <em>only</em> that resource, loads.</p>
 
   <p>This document specifies such a validation scheme, extending several HTML
 elements with a <code>integrity</code> attribute that contains a cryptographic hash of
@@ -145,37 +147,58 @@ substitute malicious content.</p>
         integrity="ni:///sha-256;C6CB9UYIS9UJeqinPHWTHVqh_E1uhG5Twh-Y5qFQmYg"&gt;
 </code></pre>
 
-  <p>The mechanism specified here may also be useful for purposes other than
+  <p>Scripts, of course, are not the only resource type which would benifit
+from integrity validation. The scheme specified here applies to all HTML
+elements which trigger fetches, as well as to fetches triggered from CSS
+and JavaScript.</p>
+
+  <p>Moreover, integrity metadata may also be useful for purposes other than
 validation. User agents may decide to use the integrity metadata as an
 identifier in a local cache, for instance, meaning that common resources
-(for example, JavaScript libraries) could be cached and retrieved regardless
-of their URL.</p>
+(for example, JavaScript libraries) could be cached and retrieved once,
+regardless of the URL from which they are loaded.</p>
 
   <section>
     <h3 id="goals">Goals</h3>
 
     <ol>
       <li>
-        <p>Provide authors with a mechanism of reducing the ambient authority
-of a host (e.g. a content delivery network, or a social network that
-provides widgets) from whom they wish to include JavaScript. Authors
-should be able to grant authority to load <em>a</em> script, not <em>any</em>
-script, and compromise of the third-party service should not
-automatically mean compromise of every site which includes its
-scripts.</p>
+        <p>Compromise of the third-party service should not automatically mean
+compromise of every site which includes its scripts. Content authors
+will have a mechanism by which they can specify expectations for
+content they load, meaning for example that they could load a
+<em>specific</em> script, and not <em>any</em> script that happens to have a
+particular URL.</p>
       </li>
       <li>
-        <p>Improved cachability of common resources: if the user agent downloads
-jQuery once, it shouldn&#8217;t have to download it again, even if it comes
-from a new URL.</p>
+        <p>The verification mechanism should extend to all resource types that
+a page may fetch in the course of its execution and rendering. Active
+content (scripts, style, <code>iframe</code> contents, etc) are, of course,
+critical, but inactive content such as images and fonts will also be
+covered.</p>
+      </li>
+      <li>
+        <p>The verification mechanism should have reporting functionality which
+would inform the author that an invalid resource was downloaded.
+Further it should be possible for an author to choose to run <em>only</em>
+the reporting functionality, allowing potentially corrupt resources
+to run on her site, but flagging violations for manual review.</p>
+      </li>
+      <li>
+        <p>The metadata provided for verification will enable improvements to
+user agents&#8217; caching schemes: common resources such as JavaScript
+libraries can be downloaded once, and only once, even if multiple
+instances with distinct URLs are requested.</p>
       </li>
       <li>
         <p>(potentially) Relax mixed-content warnings for resources whose
-integrity is verified.</p>
+integrity is verified. If the integrity metadata for a resource
+is delivered over a secure channel, the user agent might choose to
+allow loading the resource over an insecure channel.</p>
       </li>
     </ol>
 
-    <p class="todo">I&#8217;m not sure about #3. Get more detail from the WG about the benefits that
+    <p class="todo">I&#8217;m not sure about #5. Get more detail from the WG about the benefits that
 a fallback system would enable. (mkwst)</p>
   </section>
   <!-- /Introduction::Goals -->
@@ -191,8 +214,18 @@ the code she&#8217;s carefully reviewed is executed. She can do so by generating
 <a href="#dfn-integrity-metadata">integrity metadata</a> for the script she&#8217;s planning on including, and
 adding it to the <code>script</code> element she includes on her page:</p>
 
-        <pre><code>&lt;script src="https://analytics-r-us.com/include.js"
+        <pre><code>&lt;script src="https://analytics-r-us.com/v1.0/include.js"
         integrity="ni:///sha-256;SDfwewFAE...wefjijfE"&gt;&lt;/script&gt;
+</code></pre>
+      </li>
+      <li>
+        <p>An advertising network wishes to ensure that third-party content only
+is pushed to users after review. They can ensure that only reviewed code is
+delivered by adding <a href="#dfn-integrity-metadata">integrity metadata</a> to the <code>iframe</code> element wrapping
+the advertisement:</p>
+
+        <pre><code>&lt;iframe src="https://awesome-ads.com/advertisement1.html"
+        integrity="ni:///sha-256;kasfdsaffs...eoirW-e"&gt;&lt;/iframe&gt;
 </code></pre>
       </li>
       <li>
@@ -206,14 +239,16 @@ elements which users click on to trigger a download:</p>
 </code></pre>
       </li>
       <li>
-        <p>An advertising network wishes to ensure that third-party content only
-is pushed to users after review. They can ensure that only reviewed code is
-delivered by adding <a href="#dfn-integrity-metadata">integrity metadata</a> to the <code>iframe</code> element wrapping
-the advertisement:</p>
-
-        <pre><code>&lt;iframe src="https://awesome-ads.com/advertisement1.html"
-        integrity="ni:///sha-256;kasfdsaffs...eoirW-e"&gt;&lt;/iframe&gt;
-</code></pre>
+        <p>A user agent wishes to ensure that pieces of its UI which are rendered via
+HTML aren&#8217;t manipulated before display. <a href="#dfn-integrity-metadata">Integrity metadata</a> mitigates the
+risk that altered JavaScript from the public web or from the local filesystem
+will run in a high-privilege context.</p>
+      </li>
+      <li>
+        <p>The author of a mash-up wants to make sure her creation remains in a working
+state. Adding <a href="#dfn-integrity-metadata">integrity metadata</a> to external subresources defines an
+expected revision of the included files. The author can then use the reporting
+functionality to be notified of chanfes to the included resources.</p>
       </li>
     </ul>
 
@@ -431,7 +466,7 @@ preflight&#8221; algorithms:</p>
         </ol>
       </li>
       <li>
-        <p>Before firing the [process response end-of-file][] event for any
+        <p>Before firing the <a href="http://fetch.spec.whatwg.org/#process-request-end-of-file">process request end-of-file</a> event for any
 <var>request</var>:</p>
 
         <ol>

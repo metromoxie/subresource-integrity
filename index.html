@@ -196,10 +196,16 @@ integrity is verified. If the integrity metadata for a resource
 is delivered over a secure channel, the user agent might choose to
 allow loading the resource over an insecure channel.</p>
       </li>
+      <li>
+        <p>(potentially) Allow resources to be downloaded from non-canonical
+sources (for instance, over an insecure channel) for performance,
+but fall back to a canonical source if the non-canonical source
+fails an integrity check. </p>
+      </li>
     </ol>
 
-    <p class="todo">I&#8217;m not sure about #5. Get more detail from the WG about the benefits that
-a fallback system would enable. (mkwst)</p>
+    <p class="todo">I&#8217;m not sure about #5 and #6. Get more detail from the WG about the
+benefits that such a fallback system would enable. (mkwst)</p>
   </section>
   <!-- /Introduction::Goals -->
 
@@ -249,6 +255,17 @@ will run in a high-privilege context.</p>
 state. Adding <a href="#dfn-integrity-metadata">integrity metadata</a> to external subresources defines an
 expected revision of the included files. The author can then use the reporting
 functionality to be notified of chanfes to the included resources.</p>
+      </li>
+      <li>
+        <p>An author wishes to load a resource over an insecure channel for performance
+reasons, but fall back to a secure channel if the insecurely-loaded resource
+is manipulated. She can do this by adding <a href="#dfn-integrity-metadata">integrity metadata</a> and a
+<a href="#the-noncanonical-src-attribute">non-canonical source</a> to the <code>script</code> element:</p>
+
+        <pre><code>&lt;script src="https://rockin-resources.com/script.js"
+        noncanonical-src="http://insecurity-is-inherent.net/script.js"
+        integrity="ni:///sha-256;asijfiqu4t12...woeji3W"&gt;&lt;/script&gt;
+</code></pre>
       </li>
     </ul>
 
@@ -513,30 +530,27 @@ information&#8221; (<code>ni</code>) URI. [[!RFC6920]]</p>
     </section>
     <!-- /Framework::HTML::integrity -->
 
-    <section>
+    <section class="todo">
       <h4 id="the-noncanonical-src-attribute">The <code>noncanonical-src</code> attribute</h4>
 
-      <div class="todo">
-        <p>The idea is that conformant browsers would first try to load resources from
+      <p>The idea is that conformant browsers would first try to load resources from
 the <code>noncanonical-src</code> attribute&#8217;s URL iff a <code>integrity</code> attribute is present.
 Then, if the resource failed to match the digest, the user agent would
 fall back to the <code>src</code> attribute&#8217;s URL. That is:</p>
 
-        <pre><code>&lt;script src="http://example.com/script.js"
+      <pre><code>&lt;script src="http://example.com/script.js"
         noncanonical-src="http://cdn.example.com/script.js"
         integrity="ni:///sha-256;jsdfhiuwergn...vaaetgoifq"&gt;&lt;/script&gt;
 </code></pre>
 
-        <p>The noncanonical resource would be fetched with its <a href="http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode">omit credentials
+      <p>The noncanonical resource would be fetched with its <a href="http://fetch.spec.whatwg.org/#concept-request-omit-credentials-mode">omit credentials
 mode</a> set to <code>always</code>, to prevent leakage of cookies across insecure
 channels.</p>
 
-        <p>This only makes sense if we care about allowing cache-friendly (read &#8220;HTTP&#8221;)
+      <p>This only makes sense if we care about allowing cache-friendly (read &#8220;HTTP&#8221;)
 URLs to load in an HTTPS context without warnings. I&#8217;m not sure we do, so
 I&#8217;m not going to put too much thought into the details here before we
 discuss things a bit more. (mkwst)</p>
-      </div>
-
     </section>
     <!-- /Framework::HTML::noncanonical-src -->
 

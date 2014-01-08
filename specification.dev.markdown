@@ -92,8 +92,13 @@ regardless of the URL from which they are loaded.
     is delivered over a secure channel, the user agent might choose to
     allow loading the resource over an insecure channel.
 
-I'm not sure about #5. Get more detail from the WG about the benefits that
-a fallback system would enable. (mkwst)
+6.  (potentially) Allow resources to be downloaded from non-canonical
+    sources (for instance, over an insecure channel) for performance,
+    but fall back to a canonical source if the non-canonical source
+    fails an integrity check. 
+
+I'm not sure about #5 and #6. Get more detail from the WG about the
+benefits that such a fallback system would enable. (mkwst)
 {:.todo}
 </section><!-- /Introduction::Goals -->
 
@@ -134,6 +139,15 @@ a fallback system would enable. (mkwst)
     state. Adding [integrity metadata][] to external subresources defines an
     expected revision of the included files. The author can then use the reporting
     functionality to be notified of chanfes to the included resources.
+
+*   An author wishes to load a resource over an insecure channel for performance
+    reasons, but fall back to a secure channel if the insecurely-loaded resource
+    is manipulated. She can do this by adding [integrity metadata][] and a
+    [non-canonical source][noncanonical] to the `script` element:
+
+        <script src="https://rockin-resources.com/script.js"
+                noncanonical-src="http://insecurity-is-inherent.net/script.js"
+                integrity="ni:///sha-256;asijfiqu4t12...woeji3W"></script>
 
 </section><!-- /Introduction::Use Cases -->
 </section><!-- /Introduction -->
@@ -380,11 +394,10 @@ The `integrity` IDL attribute must [reflect][] the `integrity` content attribute
 [reflect]: http://www.w3.org/TR/html5/infrastructure.html#reflect
 </section><!-- /Framework::HTML::integrity -->
 
-<section>
+<section class="todo">
 #### The `noncanonical-src` attribute
 [noncanonical]: #the-noncanonical-src-attribute
 
-<div class="todo">
 The idea is that conformant browsers would first try to load resources from
 the `noncanonical-src` attribute's URL iff a `integrity` attribute is present.
 Then, if the resource failed to match the digest, the user agent would
@@ -404,8 +417,6 @@ This only makes sense if we care about allowing cache-friendly (read "HTTP")
 URLs to load in an HTTPS context without warnings. I'm not sure we do, so
 I'm not going to put too much thought into the details here before we
 discuss things a bit more. (mkwst)
-</div>
-
 </section><!-- /Framework::HTML::noncanonical-src -->
 
 <section>
